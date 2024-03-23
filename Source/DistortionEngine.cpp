@@ -24,3 +24,13 @@ DistortionEngine::DistortionEngine()
     auto& postGain = processorChain.template get<postGainIndex>();
     postGain.setGainDecibels(-20.0f);
 }
+
+void DistortionEngine::setPreGain(float gainValue)
+{
+    preGain = gainValue;
+}
+
+void DistortionEngine::setPostGain(float gainValue)
+{
+    postGain = gainValue;
+}

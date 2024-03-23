@@ -54,6 +54,9 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+    //==============================================================================
+    DistortionEngine& getDistortionEngine() { return distortionEngine; }
+
 private:
 
     DistortionEngine distortionEngine;
