@@ -4,6 +4,10 @@
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
   <MAINGROUP id="Dr63OV" name="MorphShaper">
     <GROUP id="{6699D6CE-57FC-2D39-CA7F-8A444C7A8011}" name="Source">
+      <FILE id="VyaHlt" name="WavetableWaveshaper.cpp" compile="1" resource="0"
+            file="Source/WavetableWaveshaper.cpp"/>
+      <FILE id="E9z4Ae" name="WavetableWaveshaper.h" compile="0" resource="0"
+            file="Source/WavetableWaveshaper.h"/>
       <FILE id="D8FV2y" name="DistortionEditor.cpp" compile="1" resource="0"
             file="Source/DistortionEditor.cpp"/>
       <FILE id="UzqDgw" name="DistortionEditor.h" compile="0" resource="0"

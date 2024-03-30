@@ -12,12 +12,6 @@
 
 DistortionEngine::DistortionEngine()
 {
-    auto& waveshaper = processorChain.get<waveshaperIndex>();
-    waveshaper.functionToUse = [](float x)
-    {
-        return std::tanh(x);
-    };
-
     auto& preGain = processorChain.template get<preGainIndex>();
     preGain.setGainDecibels(30.0f);
 
@@ -33,4 +27,9 @@ void DistortionEngine::setPreGain(float gainValue)
 void DistortionEngine::setPostGain(float gainValue)
 {
     postGain = gainValue;
+}
+
+void DistortionEngine::setModulationParameter(float modulationValue)
+{
+    this->modulationParameter = modulationValue;
 }

@@ -27,6 +27,7 @@ public:
 
 private:
     DistortionEngine& distortionEngine;
-    juce::Slider preGainSlider, postGainSlider;
+    juce::Slider preGainSlider, postGainSlider, modulationSlider;
+    juce::Label preGainSliderLabel, postGainSliderLabel, modulationSliderLabel;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DistortionEditor)
 };

@@ -10,6 +10,7 @@
 
 #pragma once
 #include <JuceHeader.h>
+#include "WavetableWaveshaper.h"
 
 class DistortionEngine
 {
@@ -24,6 +25,7 @@ public:
 
     void setPreGain(float gainValue);
     void setPostGain(float gainValue);
+    void setModulationParameter(float modulationValue);
 
 private:
     enum
@@ -32,13 +34,16 @@ private:
         waveshaperIndex,
         postGainIndex
     };
-    juce::dsp::ProcessorChain<juce::dsp::Gain<float>, juce::dsp::WaveShaper<float>, juce::dsp::Gain<float>> processorChain;
-    std::atomic<float> preGain, postGain;
+    juce::dsp::ProcessorChain<juce::dsp::Gain<float>, WavetableWaveshaper, juce::dsp::Gain<float>> processorChain;
+    std::atomic<float> preGain, postGain, modulationParameter;
 };
 
 template<typename ProcessContext>
 inline void DistortionEngine::process(const ProcessContext& context) noexcept
 {
+    auto& waveshaper = processorChain.get<waveshaperIndex>();
+    waveshaper.setModulationParameter(modulationParameter);
+
     auto& preGain = processorChain.template get<preGainIndex>();
     preGain.setGainDecibels(this->preGain);
 
