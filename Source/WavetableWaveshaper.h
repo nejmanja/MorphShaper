@@ -88,6 +88,16 @@ private:
 
     float waveshaperFunction(float inputSample, float modulationParam)
     {
-        return inputSample - std::pow(inputSample, 3.0f) * modulationParam / 3.0f;
+        return waveshaperStartFunction(inputSample) * (1.0f - modulationParam) + waveshaperEndFunction(inputSample) * modulationParam;
+    }
+
+    float waveshaperStartFunction(float inputSample)
+    {
+        return inputSample;
+    }
+
+    float waveshaperEndFunction(float inputSample)
+    {
+        return tanh(inputSample);
     }
 };

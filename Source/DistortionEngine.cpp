@@ -12,11 +12,11 @@
 
 DistortionEngine::DistortionEngine()
 {
-    auto& preGain = processorChain.template get<preGainIndex>();
-    preGain.setGainDecibels(30.0f);
+    auto& preGainProcessor = processorChain.template get<preGainIndex>();
+    preGainProcessor.setGainDecibels(30.0f);
 
-    auto& postGain = processorChain.template get<postGainIndex>();
-    postGain.setGainDecibels(-20.0f);
+    auto& postGainProcessor = processorChain.template get<postGainIndex>();
+    postGainProcessor.setGainDecibels(-20.0f);
 }
 
 void DistortionEngine::setPreGain(float gainValue)
