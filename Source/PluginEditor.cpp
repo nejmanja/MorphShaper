@@ -18,6 +18,7 @@ MorphShaperAudioProcessorEditor::MorphShaperAudioProcessorEditor (MorphShaperAud
     setSize (400, 300);
 
     addAndMakeVisible(distortionEditor);
+    addAndMakeVisible(wavetableLibraryPicker);
 }
 
 MorphShaperAudioProcessorEditor::~MorphShaperAudioProcessorEditor()
@@ -39,5 +40,8 @@ void MorphShaperAudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
-    distortionEditor.setBounds(0, 20, getWidth(), getHeight());
+    auto bounds = getBounds();
+    bounds.removeFromTop(30); // for the header
+    wavetableLibraryPicker.setBounds(bounds.removeFromTop(bounds.getHeight() / 4));
+    distortionEditor.setBounds(bounds);
 }

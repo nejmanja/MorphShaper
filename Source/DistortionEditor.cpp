@@ -59,6 +59,7 @@ DistortionEditor::DistortionEditor(DistortionEngine& distortionEngine): distorti
     modulationSliderLabel.attachToComponent(&modulationSlider, false);
     modulationSliderLabel.setText("Wavetable Position", juce::dontSendNotification);
     modulationSliderLabel.setJustificationType(juce::Justification::centred);
+
 }
 
 DistortionEditor::~DistortionEditor()
@@ -82,7 +83,8 @@ void DistortionEditor::resized()
     // This method is where you should set the bounds of any child
     // components that your component contains..
     auto sliderWidth = getWidth() / 3;
-    preGainSlider.setBounds(0, 50, sliderWidth, sliderWidth + 50);
-    postGainSlider.setBounds(sliderWidth, 50, sliderWidth, sliderWidth + 50);
-    modulationSlider.setBounds(sliderWidth * 2.0f, 50, sliderWidth, sliderWidth + 50);
+    preGainSlider.setBounds(0, 20, sliderWidth, sliderWidth + 50);
+    postGainSlider.setBounds(sliderWidth, 20, sliderWidth, sliderWidth + 50);
+    modulationSlider.setBounds(sliderWidth * 2.0f, 20, sliderWidth, sliderWidth + 50);
 }
+

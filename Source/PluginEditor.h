@@ -11,6 +11,7 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 #include "DistortionEditor.h"
+#include "WavetableLibraryPicker.h"
 
 //==============================================================================
 /**
@@ -30,6 +31,7 @@ private:
     // access the processor object that created it.
     MorphShaperAudioProcessor& audioProcessor;
     DistortionEditor distortionEditor;
+    WavetableLibraryPicker wavetableLibraryPicker;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MorphShaperAudioProcessorEditor)
 };
