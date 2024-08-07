@@ -35,7 +35,7 @@ float WavetableFunction::get(float x)
 	{
 		return waveform[inputValueLow];
 	}
-	else 
+	else
 	{
 		int inputValueHigh = inputValueLow + 1;
 
@@ -43,6 +43,11 @@ float WavetableFunction::get(float x)
 
 		return waveform[inputValueLow] * (1.0f - lerpFactor) + waveform[inputValueHigh] * lerpFactor;
 	}
+}
+
+const float* const WavetableFunction::get()
+{
+	return waveform;
 }
 
 Wavetable::Wavetable()
@@ -61,24 +66,50 @@ Wavetable::Wavetable()
 	wavetable.push_back(WavetableFunction(tanhBuff));
 }
 
-float Wavetable::get(float x, float t)
+const float Wavetable::get(float x, float t)
 {
-	//if (x == 0.0f) return 0.0f;
 	// TODO cache lerped values somewhere - the value of t will change relatively sparsely compared to the sample rate
 	int maxIdx = wavetable.size() - 1;
 
 	float actualInputValue = std::clamp(t, 0.0f, 1.0f) * maxIdx;
 	int inputValueLow = static_cast<int>(actualInputValue);
-	if (inputValueLow == maxIdx) 
+	if (inputValueLow == maxIdx)
 	{
 		return wavetable[inputValueLow].get(x);
 	}
-	else 
+	else
 	{
 		int inputValueHigh = inputValueLow + 1;
 
 		float lerpFactor = std::min(actualInputValue - inputValueLow, 1.0f);
 
 		return wavetable[inputValueLow].get(x) * (1.0f - lerpFactor) + wavetable[inputValueHigh].get(x) * lerpFactor;
+	}
+}
+
+void Wavetable::get(float t, float* buff)
+{
+	// TODO cache lerped values somewhere - the value of t will change relatively sparsely compared to the sample rate
+	// this would allow to just return that instead of calculating lerp'd values here
+	int maxIdx = wavetable.size() - 1;
+
+	float actualInputValue = std::clamp(t, 0.0f, 1.0f) * maxIdx;
+	int inputValueLow = static_cast<int>(actualInputValue);
+	if (inputValueLow == maxIdx)
+	{
+		memcpy(buff, wavetable[inputValueLow].get(), MORPHSHAPER_WAVETABLE_RESOLUTION);
+	}
+	else
+	{
+		int inputValueHigh = inputValueLow + 1;
+
+		float lerpFactor = std::min(actualInputValue - inputValueLow, 1.0f);
+
+		auto* wavetableLow = wavetable[inputValueLow].get();
+		auto* wavetableHigh = wavetable[inputValueHigh].get();
+		for (int i = 0; i < MORPHSHAPER_WAVETABLE_RESOLUTION; i++)
+		{
+			buff[i] = wavetableLow[i] * (1.0f - lerpFactor) + wavetableHigh[i] * lerpFactor;
+		}
 	}
 }

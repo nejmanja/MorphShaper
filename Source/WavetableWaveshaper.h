@@ -83,6 +83,11 @@ public:
 	{
 		juce::ignoreUnused(spec);
 	}
+
+	void getCurrentWavetable(float* buff) 
+	{
+		wavetable.get(modulationParameter, buff);
+	}
 private:
 	Wavetable wavetable;
 

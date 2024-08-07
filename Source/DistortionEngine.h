@@ -27,6 +27,8 @@ public:
     void setPostGain(float gainValue);
     void setModulationParameter(float modulationValue);
 
+    void getCurrentWavetable(float* buff) { processorChain.get<waveshaperIndex>().getCurrentWavetable(buff); }
+
 private:
     enum
     {
