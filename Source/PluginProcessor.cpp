@@ -79,15 +79,19 @@ int MorphShaperAudioProcessor::getCurrentProgram()
 
 void MorphShaperAudioProcessor::setCurrentProgram (int index)
 {
+    juce::ignoreUnused(index);
 }
 
 const juce::String MorphShaperAudioProcessor::getProgramName (int index)
 {
+    juce::ignoreUnused(index);
     return {};
 }
 
 void MorphShaperAudioProcessor::changeProgramName (int index, const juce::String& newName)
 {
+    juce::ignoreUnused(index);
+    juce::ignoreUnused(newName);
 }
 
 //==============================================================================

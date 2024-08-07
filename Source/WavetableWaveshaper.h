@@ -80,6 +80,7 @@ public:
 
     void prepare(const juce::dsp::ProcessSpec& spec)
     {
+        juce::ignoreUnused(spec);
     }
 private:
     // a single modulation parameter, for prototyping purposes

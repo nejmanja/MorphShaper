@@ -30,7 +30,7 @@ DistortionEditor::DistortionEditor(DistortionEngine& distortionEngine): distorti
     preGainSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
     preGainSlider.onValueChange = [this]()
     {
-        this->distortionEngine.setPreGain(preGainSlider.getValue());
+        this->distortionEngine.setPreGain(static_cast<float>(preGainSlider.getValue()));
     };
     preGainSliderLabel.attachToComponent(&preGainSlider, false);
     preGainSliderLabel.setText("Pre Gain", juce::dontSendNotification);
@@ -42,7 +42,7 @@ DistortionEditor::DistortionEditor(DistortionEngine& distortionEngine): distorti
     postGainSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
     postGainSlider.onValueChange = [this]()
     {
-        this->distortionEngine.setPostGain(postGainSlider.getValue());
+        this->distortionEngine.setPostGain(static_cast<float>(postGainSlider.getValue()));
     };
     postGainSliderLabel.attachToComponent(&postGainSlider, false);
     postGainSliderLabel.setText("Post Gain", juce::dontSendNotification);
@@ -54,7 +54,7 @@ DistortionEditor::DistortionEditor(DistortionEngine& distortionEngine): distorti
     modulationSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
     modulationSlider.onValueChange = [this]()
     {
-        this->distortionEngine.setModulationParameter(modulationSlider.getValue());
+        this->distortionEngine.setModulationParameter(static_cast<float>(modulationSlider.getValue()));
     };
     modulationSliderLabel.attachToComponent(&modulationSlider, false);
     modulationSliderLabel.setText("Wavetable Position", juce::dontSendNotification);
@@ -85,6 +85,6 @@ void DistortionEditor::resized()
     auto sliderWidth = getWidth() / 3;
     preGainSlider.setBounds(0, 20, sliderWidth, sliderWidth + 50);
     postGainSlider.setBounds(sliderWidth, 20, sliderWidth, sliderWidth + 50);
-    modulationSlider.setBounds(sliderWidth * 2.0f, 20, sliderWidth, sliderWidth + 50);
+    modulationSlider.setBounds(sliderWidth * 2, 20, sliderWidth, sliderWidth + 50);
 }
 

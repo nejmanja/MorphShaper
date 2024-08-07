@@ -41,13 +41,13 @@ private:
 template<typename ProcessContext>
 inline void DistortionEngine::process(const ProcessContext& context) noexcept
 {
-    auto& waveshaper = processorChain.get<waveshaperIndex>();
-    waveshaper.setModulationParameter(modulationParameter);
+    auto& waveshaperProcessor = processorChain.get<waveshaperIndex>();
+    waveshaperProcessor.setModulationParameter(modulationParameter);
 
-    auto& preGain = processorChain.template get<preGainIndex>();
-    preGain.setGainDecibels(this->preGain);
+    auto& preGainProcessor = processorChain.template get<preGainIndex>();
+    preGainProcessor.setGainDecibels(this->preGain);
 
-    auto& postGain = processorChain.template get<postGainIndex>();
-    postGain.setGainDecibels(this->postGain);
+    auto& postGainProcessor = processorChain.template get<postGainIndex>();
+    postGainProcessor.setGainDecibels(this->postGain);
     processorChain.process(context);
 }

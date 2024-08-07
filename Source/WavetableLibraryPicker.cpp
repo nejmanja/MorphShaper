@@ -30,6 +30,7 @@ WavetableLibraryPicker::~WavetableLibraryPicker()
 
 void WavetableLibraryPicker::paint (juce::Graphics& g)
 {
+    juce::ignoreUnused(g);
 }
 
 void WavetableLibraryPicker::resized()
