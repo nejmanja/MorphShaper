@@ -12,7 +12,7 @@
 #include "DistortionEditor.h"
 
 //==============================================================================
-DistortionEditor::DistortionEditor(DistortionEngine& distortionEngine) : distortionEngine(distortionEngine)
+DistortionEditor::DistortionEditor(DistortionEngine& distortionEngine, juce::AudioProcessorValueTreeState& vts) : distortionEngine(distortionEngine)
 {
 	// In your constructor, you should add any child components, and
 	// initialise any special settings that your component needs.
@@ -48,21 +48,17 @@ DistortionEditor::DistortionEditor(DistortionEngine& distortionEngine) : distort
 	postGainSliderLabel.setText("Post Gain", juce::dontSendNotification);
 	postGainSliderLabel.setJustificationType(juce::Justification::centred);
 
-	modulationSlider.setRange(0, 1);
-	modulationSlider.setValue(0);
 	modulationSlider.setSliderStyle(juce::Slider::RotaryVerticalDrag);
 	modulationSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
-	modulationSlider.onValueChange = [this]()
-	{
-		this->distortionEngine.setModulationParameter(static_cast<float>(modulationSlider.getValue()));
-		this->distortionEngine.getCurrentWavetable(currentWaveform);
-		this->repaint();
-	};
+	modulationSliderAttachment.reset(new SliderAttachment(vts, "wtPosition", modulationSlider));
+
 	modulationSliderLabel.attachToComponent(&modulationSlider, false);
 	modulationSliderLabel.setText("Wavetable Position", juce::dontSendNotification);
 	modulationSliderLabel.setJustificationType(juce::Justification::centred);
 
 	distortionEngine.getCurrentWavetable(currentWaveform);
+
+	vts.addParameterListener("wtPosition", this);
 }
 
 DistortionEditor::~DistortionEditor()
@@ -73,7 +69,7 @@ void DistortionEditor::paint(juce::Graphics& g)
 {
 	g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));   // clear the background
 
-	g.setColour(juce::Colours::red);
+	g.setColour(getLookAndFeel().findColour(juce::Slider::thumbColourId));
 	const int increment = 8;
 	juce::Path path;
 
@@ -101,5 +97,11 @@ void DistortionEditor::resized()
 	preGainSlider.setBounds(0, 20, sliderWidth, sliderWidth + 50);
 	postGainSlider.setBounds(sliderWidth, 20, sliderWidth, sliderWidth + 50);
 	modulationSlider.setBounds(sliderWidth * 2, 20, sliderWidth, sliderWidth + 50);
+}
+
+void DistortionEditor::parameterChanged(const juce::String& parameterID, float newValue)
+{
+	this->distortionEngine.getCurrentWavetable(currentWaveform);
+	repaint();
 }
 

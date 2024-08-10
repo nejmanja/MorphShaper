@@ -21,7 +21,15 @@ MorphShaperAudioProcessor::MorphShaperAudioProcessor()
                      #endif
                        )
 #endif
+    ,
+    parameters(*this, nullptr, juce::Identifier("MorphShaper"), 
+        {
+            std::make_unique<juce::AudioParameterFloat>("wtPosition", "Wavetable Position", 0.0f, 1.0f, 0.0f)
+        })
 {
+
+    wavetablePositionParameter = parameters.getRawParameterValue("wtPosition");
+    distortionEngine.reset(new DistortionEngine(wavetablePositionParameter));
 }
 
 MorphShaperAudioProcessor::~MorphShaperAudioProcessor()
@@ -99,7 +107,7 @@ void MorphShaperAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
-    distortionEngine.prepare({sampleRate, (juce::uint32)samplesPerBlock, (juce::uint32)getTotalNumOutputChannels()});
+    distortionEngine->prepare({sampleRate, (juce::uint32)samplesPerBlock, (juce::uint32)getTotalNumOutputChannels()});
 }
 
 void MorphShaperAudioProcessor::releaseResources()
@@ -151,7 +159,7 @@ void MorphShaperAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
 
     auto block = juce::dsp::AudioBlock<float>(buffer);
     auto context = juce::dsp::ProcessContextReplacing<float>(block);
-    distortionEngine.process(context);
+    distortionEngine->process(context);
 }
 
 //==============================================================================
@@ -162,7 +170,7 @@ bool MorphShaperAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* MorphShaperAudioProcessor::createEditor()
 {
-    return new MorphShaperAudioProcessorEditor (*this);
+    return new MorphShaperAudioProcessorEditor (*this, parameters);
 }
 
 //==============================================================================
@@ -171,12 +179,22 @@ void MorphShaperAudioProcessor::getStateInformation (juce::MemoryBlock& destData
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
+    auto state = parameters.copyState();
+    std::unique_ptr<juce::XmlElement> xml(state.createXml());
+    copyXmlToBinary(*xml, destData);
 }
 
 void MorphShaperAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
+    std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
+
+    if (xmlState.get() != nullptr) {
+        if (xmlState->hasTagName(parameters.state.getType())) {
+            parameters.replaceState(juce::ValueTree::fromXml(*xmlState));
+        }
+    }
 }
 
 //==============================================================================

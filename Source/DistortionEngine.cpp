@@ -10,8 +10,10 @@
 
 #include "DistortionEngine.h"
 
-DistortionEngine::DistortionEngine()
+DistortionEngine::DistortionEngine(std::atomic<float>* wavetablePositionParameter)
 {
+    this->modulationParameter = wavetablePositionParameter;
+
     auto& preGainProcessor = processorChain.template get<preGainIndex>();
     preGainProcessor.setGainDecibels(30.0f);
 
@@ -27,9 +29,4 @@ void DistortionEngine::setPreGain(float gainValue)
 void DistortionEngine::setPostGain(float gainValue)
 {
     postGain = gainValue;
-}
-
-void DistortionEngine::setModulationParameter(float modulationValue)
-{
-    this->modulationParameter = modulationValue;
 }

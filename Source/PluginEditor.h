@@ -19,7 +19,7 @@
 class MorphShaperAudioProcessorEditor  : public juce::AudioProcessorEditor
 {
 public:
-    MorphShaperAudioProcessorEditor (MorphShaperAudioProcessor&);
+    MorphShaperAudioProcessorEditor (MorphShaperAudioProcessor&, juce::AudioProcessorValueTreeState&);
     ~MorphShaperAudioProcessorEditor() override;
 
     //==============================================================================

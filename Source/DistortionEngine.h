@@ -15,7 +15,7 @@
 class DistortionEngine
 {
 public:
-    DistortionEngine();
+    DistortionEngine(std::atomic<float>*);
     void prepare(const juce::dsp::ProcessSpec& spec) { processorChain.prepare(spec); };
 
     template <typename ProcessContext>
@@ -25,7 +25,6 @@ public:
 
     void setPreGain(float gainValue);
     void setPostGain(float gainValue);
-    void setModulationParameter(float modulationValue);
 
     void getCurrentWavetable(float* buff) { processorChain.get<waveshaperIndex>().getCurrentWavetable(buff); }
 
@@ -37,14 +36,16 @@ private:
         postGainIndex
     };
     juce::dsp::ProcessorChain<juce::dsp::Gain<float>, WavetableWaveshaper, juce::dsp::Gain<float>> processorChain;
-    std::atomic<float> preGain, postGain, modulationParameter;
+    std::atomic<float> preGain, postGain;
+    // This gets passed along from the constructor, it's unique state that exists on the plugin-level.
+    std::atomic<float>* modulationParameter;
 };
 
 template<typename ProcessContext>
 inline void DistortionEngine::process(const ProcessContext& context) noexcept
 {
     auto& waveshaperProcessor = processorChain.get<waveshaperIndex>();
-    waveshaperProcessor.setModulationParameter(modulationParameter);
+    waveshaperProcessor.setModulationParameter(*modulationParameter);
 
     auto& preGainProcessor = processorChain.template get<preGainIndex>();
     preGainProcessor.setGainDecibels(this->preGain);

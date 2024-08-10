@@ -10,8 +10,8 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-MorphShaperAudioProcessorEditor::MorphShaperAudioProcessorEditor (MorphShaperAudioProcessor& p)
-    : AudioProcessorEditor (&p), audioProcessor (p), distortionEditor(audioProcessor.getDistortionEngine())
+MorphShaperAudioProcessorEditor::MorphShaperAudioProcessorEditor (MorphShaperAudioProcessor& p, juce::AudioProcessorValueTreeState& vts)
+    : AudioProcessorEditor (&p), audioProcessor (p), distortionEditor(audioProcessor.getDistortionEngine(), vts)
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.

@@ -86,7 +86,7 @@ public:
 
 	void getCurrentWavetable(float* buff) 
 	{
-		wavetable.get(modulationParameter, buff);
+		wavetable.get(modulationParameterTarget, buff);
 	}
 private:
 	Wavetable wavetable;

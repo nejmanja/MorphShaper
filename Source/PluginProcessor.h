@@ -55,11 +55,13 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
     //==============================================================================
-    DistortionEngine& getDistortionEngine() { return distortionEngine; }
+    DistortionEngine& getDistortionEngine() { return *distortionEngine; }
 
 private:
+    juce::AudioProcessorValueTreeState parameters;
+    std::atomic<float>* wavetablePositionParameter;
 
-    DistortionEngine distortionEngine;
+    std::unique_ptr<DistortionEngine> distortionEngine;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MorphShaperAudioProcessor)
 };
