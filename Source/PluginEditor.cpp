@@ -19,6 +19,9 @@ MorphShaperAudioProcessorEditor::MorphShaperAudioProcessorEditor (MorphShaperAud
 
     addAndMakeVisible(distortionEditor);
     addAndMakeVisible(wavetableLibraryPicker);
+    addAndMakeVisible(titleLabel);
+    titleLabel.setText("MorphShaper", juce::dontSendNotification);
+    titleLabel.setJustificationType(juce::Justification::centred);
 }
 
 MorphShaperAudioProcessorEditor::~MorphShaperAudioProcessorEditor()
@@ -30,10 +33,6 @@ void MorphShaperAudioProcessorEditor::paint (juce::Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
-
-    g.setColour (juce::Colours::white);
-    g.setFont (15.0f);
-    g.drawFittedText ("Morph Shaper", getLocalBounds().removeFromTop(20), juce::Justification::centred, 1);
 }
 
 void MorphShaperAudioProcessorEditor::resized()
@@ -41,7 +40,8 @@ void MorphShaperAudioProcessorEditor::resized()
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
     auto bounds = getBounds();
-    bounds.removeFromTop(30); // for the header
-    wavetableLibraryPicker.setBounds(bounds.removeFromTop(bounds.getHeight() / 4));
+    titleLabel.setBounds(bounds.removeFromTop(12));
+    auto quarterHeight = bounds.getHeight() / 4;
+    wavetableLibraryPicker.setBounds(bounds.removeFromTop(quarterHeight));
     distortionEditor.setBounds(bounds);
 }

@@ -29,8 +29,13 @@ private:
 
     juce::TextButton wavetableLibraryLoadButton;
     juce::File wavetableLibraryFolder;
-    juce::Label wavetableLibraryFolderLabel;
+    juce::Array<juce::File> wavetableFiles;
+    int currentWavetableFileIndex;
+
+    juce::Label wavetableLibraryFolderLabel, currentWavetableFileLabel;
+    juce::TextButton previousWavetableButton, nextWavetableButton;
     std::unique_ptr<juce::FileChooser> wavetableLibraryFolderChooser;
+    juce::AudioFormatManager audioFormatManager;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WavetableLibraryPicker)
 };

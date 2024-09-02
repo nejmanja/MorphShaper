@@ -32,6 +32,7 @@ private:
     MorphShaperAudioProcessor& audioProcessor;
     DistortionEditor distortionEditor;
     WavetableLibraryPicker wavetableLibraryPicker;
+    juce::Label titleLabel;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MorphShaperAudioProcessorEditor)
 };
