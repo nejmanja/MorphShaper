@@ -66,6 +66,11 @@ Wavetable::Wavetable()
 	wavetable.push_back(WavetableFunction(tanhBuff));
 }
 
+Wavetable::Wavetable(std::vector<WavetableFunction> wavetableBuffer)
+{
+	set(wavetableBuffer);
+}
+
 const float Wavetable::get(float x, float t)
 {
 	// TODO cache lerped values somewhere - the value of t will change relatively sparsely compared to the sample rate
@@ -87,6 +92,11 @@ const float Wavetable::get(float x, float t)
 	}
 }
 
+void Wavetable::set(std::vector<WavetableFunction> wavetableFunctions)
+{
+	wavetable = wavetableFunctions;
+}
+
 void Wavetable::get(float t, float* buff)
 {
 	// TODO cache lerped values somewhere - the value of t will change relatively sparsely compared to the sample rate
@@ -97,7 +107,7 @@ void Wavetable::get(float t, float* buff)
 	int inputValueLow = static_cast<int>(actualInputValue);
 	if (inputValueLow == maxIdx)
 	{
-		memcpy(buff, wavetable[inputValueLow].get(), MORPHSHAPER_WAVETABLE_RESOLUTION);
+		memcpy(buff, wavetable[inputValueLow].get(), MORPHSHAPER_WAVETABLE_RESOLUTION * sizeof(float));
 	}
 	else
 	{

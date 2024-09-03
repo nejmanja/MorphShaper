@@ -12,6 +12,7 @@
 
 #include <JuceHeader.h>
 #include "DistortionEngine.h"
+#include "WavetableLibraryPicker.h"
 
 //==============================================================================
 /*
@@ -32,6 +33,8 @@ public:
     
 private:
     DistortionEngine& distortionEngine;
+    WavetableLibraryPicker wavetableLibraryPicker;
+
     float currentWaveform[MORPHSHAPER_WAVETABLE_RESOLUTION] {0};
     juce::Slider preGainSlider, postGainSlider, modulationSlider;
     std::unique_ptr<SliderAttachment> modulationSliderAttachment;

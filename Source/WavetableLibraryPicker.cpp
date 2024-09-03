@@ -12,7 +12,8 @@
 #include "WavetableLibraryPicker.h"
 
 //==============================================================================
-WavetableLibraryPicker::WavetableLibraryPicker()
+WavetableLibraryPicker::WavetableLibraryPicker(DistortionEngine& distortionEngine)
+	: distortionEngine(distortionEngine)
 {
 	addAndMakeVisible(wavetableLibraryLoadButton);
 	addAndMakeVisible(wavetableLibraryFolderLabel);
@@ -104,12 +105,29 @@ void WavetableLibraryPicker::loadWavetableFromFile()
 	if (reader != nullptr)
 	{
 		if (wavetableBuffer == nullptr)
-			wavetableBuffer = new float[512];
-		reader->read(&wavetableBuffer, 1, 0LL, juce::jmin(reader->lengthInSamples, 512LL));
+			wavetableBuffer = new float[MORPHSHAPER_WAVETABLE_RESOLUTION];
 
+		int numFullFrames = juce::jmin(static_cast<int>(reader->lengthInSamples / MORPHSHAPER_WAVETABLE_RESOLUTION / 4), 32);
+		std::vector<WavetableFunction> funcs;
+		for (int i = 0; i < numFullFrames; i++)
+		{
+			// TODO - delete this! this is just temporary shenanigans to ensure compatibility
+			// with serum wavetables for initial testing, which happen to be 2048 samples per frame
+			float* tempBuffer = new float[MORPHSHAPER_WAVETABLE_RESOLUTION * 4];
+			reader->read(&tempBuffer, 1, MORPHSHAPER_WAVETABLE_RESOLUTION * i * 4, MORPHSHAPER_WAVETABLE_RESOLUTION * 4);
+			for (int j = 0; j < MORPHSHAPER_WAVETABLE_RESOLUTION; j++)
+			{
+				wavetableBuffer[j] = tempBuffer[j * 4];
+			}
+			delete[] tempBuffer;
+			funcs.push_back(WavetableFunction(wavetableBuffer));
+		}
 		// The caller is responsible to free the reader
 		delete reader;
 		// TODO handle errors...
+
+		distortionEngine.setWavetable(funcs);
+
 		repaint();
 	}
 	// TODO tell the user the file makes no sense otherwise!

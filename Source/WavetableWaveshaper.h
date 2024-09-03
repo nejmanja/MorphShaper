@@ -20,6 +20,16 @@ class WavetableWaveshaper
 public:
 	WavetableWaveshaper()
 	{
+
+	}
+
+	WavetableWaveshaper(std::vector<WavetableFunction> wavetableFunctions) : wavetable(wavetableFunctions)
+	{
+	}
+
+	void setWavetable(std::vector<WavetableFunction> wavetableFunctions)
+	{
+		wavetable.set(wavetableFunctions);
 	}
 
 	void reset() noexcept
@@ -84,7 +94,7 @@ public:
 		juce::ignoreUnused(spec);
 	}
 
-	void getCurrentWavetable(float* buff) 
+	void getCurrentWavetable(float* buff)
 	{
 		wavetable.get(modulationParameterTarget, buff);
 	}

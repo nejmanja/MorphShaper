@@ -11,6 +11,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "DistortionEngine.h"
 
 //==============================================================================
 /*
@@ -18,7 +19,7 @@
 class WavetableLibraryPicker  : public juce::Component
 {
 public:
-    WavetableLibraryPicker();
+    WavetableLibraryPicker(DistortionEngine& distortionEngine);
     ~WavetableLibraryPicker() override;
 
     void paint (juce::Graphics&) override;
@@ -43,6 +44,8 @@ private:
     juce::TextButton prevWavetableButton, nextWavetableButton;
     std::unique_ptr<juce::FileChooser> wavetableLibraryFolderChooser;
     juce::AudioFormatManager audioFormatManager;
+
+    DistortionEngine& distortionEngine;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WavetableLibraryPicker)
 };

@@ -18,7 +18,6 @@ MorphShaperAudioProcessorEditor::MorphShaperAudioProcessorEditor (MorphShaperAud
     setSize (400, 300);
 
     addAndMakeVisible(distortionEditor);
-    addAndMakeVisible(wavetableLibraryPicker);
     addAndMakeVisible(titleLabel);
     titleLabel.setText("MorphShaper", juce::dontSendNotification);
     titleLabel.setJustificationType(juce::Justification::centred);
@@ -41,7 +40,5 @@ void MorphShaperAudioProcessorEditor::resized()
     // subcomponents in your editor..
     auto bounds = getBounds();
     titleLabel.setBounds(bounds.removeFromTop(12));
-    auto quarterHeight = bounds.getHeight() / 4;
-    wavetableLibraryPicker.setBounds(bounds.removeFromTop(quarterHeight));
     distortionEditor.setBounds(bounds);
 }

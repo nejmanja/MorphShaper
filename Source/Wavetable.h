@@ -34,8 +34,12 @@ public:
 	// TODO delete
 	// Default constructor, creates 2 frames, one being linear, other being tanh, for testing
 	Wavetable();
+	// Construct a wavetable from a set of wavetable functions, to be linearly interpolated between
+	Wavetable(std::vector<WavetableFunction> wavetableBuffer);
 	// Get the value of the wavetable function for a given input x and interpolation parameter t
 	const float get(float x, float t);
+
+	void set(std::vector<WavetableFunction> wavetableFunctions);
 	// Get the whole wavetable for an interpolation parameter t, populate already created buffer
 	void get(float t, float* buff);
 private:

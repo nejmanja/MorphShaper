@@ -12,7 +12,8 @@
 #include "DistortionEditor.h"
 
 //==============================================================================
-DistortionEditor::DistortionEditor(DistortionEngine& distortionEngine, juce::AudioProcessorValueTreeState& vts) : distortionEngine(distortionEngine)
+DistortionEditor::DistortionEditor(DistortionEngine& distortionEngine, juce::AudioProcessorValueTreeState& vts) 
+	: distortionEngine(distortionEngine), wavetableLibraryPicker(distortionEngine)
 {
 	// In your constructor, you should add any child components, and
 	// initialise any special settings that your component needs.
@@ -23,6 +24,7 @@ DistortionEditor::DistortionEditor(DistortionEngine& distortionEngine, juce::Aud
 	addAndMakeVisible(preGainSliderLabel);
 	addAndMakeVisible(postGainSliderLabel);
 	addAndMakeVisible(modulationSliderLabel);
+	addAndMakeVisible(wavetableLibraryPicker);
 
 	preGainSlider.setRange(-100, 30);
 	preGainSlider.setValue(30);
@@ -73,7 +75,10 @@ void DistortionEditor::paint(juce::Graphics& g)
 	const int increment = 8;
 	juce::Path path;
 
-	auto bounds = getBounds();
+
+	auto bounds = getLocalBounds();
+	auto quarterHeight = bounds.getHeight() / 4;
+	bounds.removeFromBottom(quarterHeight);
 	float widthScale = static_cast<float>(bounds.getWidth()) / MORPHSHAPER_WAVETABLE_RESOLUTION;
 	float heightScale = bounds.getHeight() / 2.0f;
 	for (int i = 0; i < MORPHSHAPER_WAVETABLE_RESOLUTION - increment; i += increment)
@@ -81,9 +86,9 @@ void DistortionEditor::paint(juce::Graphics& g)
 		path.addLineSegment(
 			juce::Line<float>(
 				i * widthScale,
-				-(currentWaveform[i] * heightScale) + heightScale,
+				-(currentWaveform[i] * heightScale) + heightScale + quarterHeight,
 				(i + increment) * widthScale,
-				-(currentWaveform[i + increment] * heightScale) + heightScale),
+				-(currentWaveform[i + increment] * heightScale) + heightScale + quarterHeight),
 			1.0f);
 	}
 	g.strokePath(path, juce::PathStrokeType(2.0f));
@@ -93,10 +98,13 @@ void DistortionEditor::resized()
 {
 	// This method is where you should set the bounds of any child
 	// components that your component contains..
+	auto bounds = getLocalBounds();
+	wavetableLibraryPicker.setBounds(bounds.removeFromTop(bounds.getHeight() / 4));
 	auto sliderWidth = getWidth() / 3;
-	preGainSlider.setBounds(0, 20, sliderWidth, sliderWidth + 50);
-	postGainSlider.setBounds(sliderWidth, 20, sliderWidth, sliderWidth + 50);
-	modulationSlider.setBounds(sliderWidth * 2, 20, sliderWidth, sliderWidth + 50);
+	bounds.removeFromTop(20); // for the slider text
+	preGainSlider.setBounds(bounds.removeFromLeft(sliderWidth));
+	postGainSlider.setBounds(bounds.removeFromLeft(sliderWidth));
+	modulationSlider.setBounds(bounds);
 }
 
 void DistortionEditor::parameterChanged(const juce::String& parameterID, float newValue)
