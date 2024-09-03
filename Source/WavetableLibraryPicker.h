@@ -27,13 +27,20 @@ public:
 private:
     void chooseWavetableLibraryFolder();
 
+    void prevWavetable();
+    void nextWavetable();
+
+    void loadWavetableFromFile();
+
     juce::TextButton wavetableLibraryLoadButton;
     juce::File wavetableLibraryFolder;
     juce::Array<juce::File> wavetableFiles;
     int currentWavetableFileIndex;
 
+    float* wavetableBuffer = nullptr;
+
     juce::Label wavetableLibraryFolderLabel, currentWavetableFileLabel;
-    juce::TextButton previousWavetableButton, nextWavetableButton;
+    juce::TextButton prevWavetableButton, nextWavetableButton;
     std::unique_ptr<juce::FileChooser> wavetableLibraryFolderChooser;
     juce::AudioFormatManager audioFormatManager;
 
