@@ -78,20 +78,25 @@ void DistortionEditor::paint(juce::Graphics& g)
 
 	auto bounds = getLocalBounds();
 	auto quarterHeight = bounds.getHeight() / 4;
-	bounds.removeFromBottom(quarterHeight);
-	float widthScale = static_cast<float>(bounds.getWidth()) / MORPHSHAPER_WAVETABLE_RESOLUTION;
-	float heightScale = bounds.getHeight() / 2.0f;
+	auto halfWidth = bounds.getWidth() / 2;
+	bounds = bounds.removeFromTop(quarterHeight).removeFromRight(halfWidth);
+	float widthScale = static_cast<float>(bounds.getWidth() - 2) / MORPHSHAPER_WAVETABLE_RESOLUTION;
+	float heightScale = bounds.getHeight() / 2;
 	for (int i = 0; i < MORPHSHAPER_WAVETABLE_RESOLUTION - increment; i += increment)
 	{
 		path.addLineSegment(
 			juce::Line<float>(
-				i * widthScale,
-				-(currentWaveform[i] * heightScale) + heightScale + quarterHeight,
-				(i + increment) * widthScale,
-				-(currentWaveform[i + increment] * heightScale) + heightScale + quarterHeight),
+				i * widthScale + bounds.getX() + 2,
+				-(currentWaveform[i] * (heightScale - 4)) + heightScale,
+				(i + increment) * widthScale + bounds.getX() + 2,
+				-(currentWaveform[i + increment] * (heightScale - 4)) + heightScale),
 			1.0f);
 	}
 	g.strokePath(path, juce::PathStrokeType(2.0f));
+
+
+	g.setColour(getLookAndFeel().findColour(juce::Slider::rotarySliderFillColourId));
+	g.drawRect(bounds, 2);
 }
 
 void DistortionEditor::resized()
@@ -99,7 +104,7 @@ void DistortionEditor::resized()
 	// This method is where you should set the bounds of any child
 	// components that your component contains..
 	auto bounds = getLocalBounds();
-	wavetableLibraryPicker.setBounds(bounds.removeFromTop(bounds.getHeight() / 4));
+	wavetableLibraryPicker.setBounds(bounds.removeFromTop(bounds.getHeight() / 4).removeFromLeft(bounds.getWidth() / 2));
 	auto sliderWidth = getWidth() / 3;
 	bounds.removeFromTop(20); // for the slider text
 	preGainSlider.setBounds(bounds.removeFromLeft(sliderWidth));

@@ -50,26 +50,14 @@ WavetableLibraryPicker::~WavetableLibraryPicker()
 
 void WavetableLibraryPicker::paint(juce::Graphics& g)
 {
-	float halfWidth = static_cast<float>(getWidth()) / 2.0f;
-
-	if (wavetableBuffer != nullptr)
-	{
-		g.setColour(juce::Colours::aqua);
-		for (int i = 0; i < 128; i++)
-		{
-			g.fillEllipse(static_cast<float>(i) / 128.0f * halfWidth + halfWidth, (wavetableBuffer[i * 4] * 0.5f + 0.5f) * getHeight(), 2, 2);
-		}
-	}
-
-	g.setColour(getLookAndFeel().findColour(juce::Slider::rotarySliderFillColourId));
-	g.drawRect(getLocalBounds().removeFromRight(static_cast<int>(halfWidth)), 2);
+	juce::ignoreUnused(g);
 }
 
 void WavetableLibraryPicker::resized()
 {
 	// This method is where you should set the bounds of any child
 	// components that your component contains..
-	auto bounds = getLocalBounds().removeFromLeft(getWidth() / 2);
+	auto bounds = getLocalBounds();
 	auto thirdHeight = bounds.getHeight() / 3;
 	auto smallButtonWidth = bounds.getWidth() / 8;
 	wavetableLibraryLoadButton.setBounds(bounds.removeFromTop(thirdHeight));
@@ -88,7 +76,7 @@ void WavetableLibraryPicker::chooseWavetableLibraryFolder()
 		{
 			wavetableLibraryFolder = chooser.getResult();
 			wavetableFiles = wavetableLibraryFolder.findChildFiles(juce::File::TypesOfFileToFind::findFiles, false);
-			wavetableLibraryFolderLabel.setText(wavetableLibraryFolder.getFullPathName(), juce::dontSendNotification);
+			wavetableLibraryFolderLabel.setText(wavetableLibraryFolder.getFileName(), juce::dontSendNotification);
 
 			if (!wavetableFiles.isEmpty())
 			{
