@@ -27,6 +27,7 @@ public:
 	void setPostGain(float gainValue);
 
 	void getCurrentWavetable(float* buff) { processorChain.get<waveshaperIndex>().getCurrentWavetable(buff); }
+	void getCurrentWavetable(float* buff, float modulationParam) { processorChain.get<waveshaperIndex>().getCurrentWavetable(buff, modulationParam); }
 	void setWavetable(std::vector<WavetableFunction> wavetableFunctions) { processorChain.get<waveshaperIndex>().setWavetable(wavetableFunctions); }
 private:
 	enum

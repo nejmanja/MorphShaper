@@ -32,6 +32,10 @@ public:
     void parameterChanged(const juce::String& parameterID, float newValue) override;
     
 private:
+    juce::Point<float> getPointInWavetable(int sampleIdx, juce::Rectangle<int> bounds, float widthScale, float heightScale);
+    void generateWavetablePath(juce::Rectangle<int> bounds);
+
+    juce::Path wavetablePath;
     DistortionEngine& distortionEngine;
     WavetableLibraryPicker wavetableLibraryPicker;
 
