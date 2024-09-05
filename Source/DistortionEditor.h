@@ -20,7 +20,7 @@
 
 typedef juce::AudioProcessorValueTreeState::SliderAttachment SliderAttachment;
 
-class DistortionEditor  : public juce::Component, public juce::AudioProcessorValueTreeState::Listener
+class DistortionEditor  : public juce::Component
 {
 public:
     DistortionEditor(DistortionEngine& distortionEngine, juce::AudioProcessorValueTreeState& vts);
@@ -28,16 +28,9 @@ public:
 
     void paint (juce::Graphics&) override;
     void resized() override;
-
-    void parameterChanged(const juce::String& parameterID, float newValue) override;
     
 private:
-    juce::Point<float> getPointInWavetable(int sampleIdx, juce::Rectangle<int> bounds, float widthScale, float heightScale);
-    void generateWavetablePath(juce::Rectangle<int> bounds);
-
-    juce::Path wavetablePath;
     DistortionEngine& distortionEngine;
-    WavetableLibraryPicker wavetableLibraryPicker;
 
     float currentWaveform[MORPHSHAPER_WAVETABLE_RESOLUTION] {0};
     juce::Slider preGainSlider, postGainSlider, modulationSlider;

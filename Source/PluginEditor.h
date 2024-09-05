@@ -1,7 +1,7 @@
 /*
   ==============================================================================
 
-    This file contains the basic framework code for a JUCE plugin editor.
+	This file contains the basic framework code for a JUCE plugin editor.
 
   ==============================================================================
 */
@@ -11,26 +11,36 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 #include "DistortionEditor.h"
+#include "WavetableDrawer.h"
 
 //==============================================================================
 /**
 */
-class MorphShaperAudioProcessorEditor  : public juce::AudioProcessorEditor
+class MorphShaperAudioProcessorEditor : public juce::AudioProcessorEditor
 {
 public:
-    MorphShaperAudioProcessorEditor (MorphShaperAudioProcessor&, juce::AudioProcessorValueTreeState&);
-    ~MorphShaperAudioProcessorEditor() override;
+	MorphShaperAudioProcessorEditor(MorphShaperAudioProcessor&, juce::AudioProcessorValueTreeState&);
+	~MorphShaperAudioProcessorEditor() override;
 
-    //==============================================================================
-    void paint (juce::Graphics&) override;
-    void resized() override;
+	//==============================================================================
+	void paint(juce::Graphics&) override;
+	void resized() override;
 
 private:
-    // This reference is provided as a quick way for your editor to
-    // access the processor object that created it.
-    MorphShaperAudioProcessor& audioProcessor;
-    DistortionEditor distortionEditor;
-    juce::Label titleLabel;
+	void modulationParameterChanged(float newValue);
+	// This reference is provided as a quick way for your editor to
+	// access the processor object that created it.
+	MorphShaperAudioProcessor& audioProcessor;
+	DistortionEditor distortionEditor;
+	WavetableDrawer wavetableDrawer;
+	WavetableLibraryPicker wavetableLibraryPicker;
+	juce::AudioProcessorValueTreeState& valueTreeState;
+	std::unique_ptr<juce::ParameterAttachment> modulationParamAttachment;
+	juce::Label titleLabel;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MorphShaperAudioProcessorEditor)
+	std::function<void(float)> modulationParamChangedCallback;
+
+	std::array<float, MORPHSHAPER_WAVETABLE_RESOLUTION> currentWavetable;
+
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MorphShaperAudioProcessorEditor)
 };
