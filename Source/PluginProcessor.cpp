@@ -26,10 +26,14 @@ MorphShaperAudioProcessor::MorphShaperAudioProcessor()
         {
             std::make_unique<juce::AudioParameterFloat>("wtPosition", "Wavetable Position", 0.0f, 1.0f, 0.0f),
             std::make_unique<juce::AudioParameterFloat>("preGain", "Pre Gain", -100.0f, 30.0f, 0.0f),
-            std::make_unique<juce::AudioParameterFloat>("postGain", "Post Gain", -100.0f, 30.0f, 0.0f),
+            std::make_unique<juce::AudioParameterFloat>("postGain", "Post Gain", -100.0f, 30.0f, 0.0f)
         })
 {
 
+    juce::ValueTree libraryPathParam(juce::Identifier("wtLibraryPath"));
+    libraryPathParam.setProperty("path", "", nullptr);
+    libraryPathParam.setProperty("fileName", "", nullptr);
+    parameters.state.addChild(libraryPathParam, 0, nullptr);
     wavetablePositionParameter = parameters.getRawParameterValue("wtPosition");
     preGainParameter = parameters.getRawParameterValue("preGain");
     postGainParameter = parameters.getRawParameterValue("postGain");

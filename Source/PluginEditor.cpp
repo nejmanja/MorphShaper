@@ -14,7 +14,7 @@ MorphShaperAudioProcessorEditor::MorphShaperAudioProcessorEditor(MorphShaperAudi
 	: AudioProcessorEditor(&p),
 	audioProcessor(p), 
 	distortionEditor(audioProcessor.getDistortionEngine(), vts), 
-	wavetableLibraryPicker(audioProcessor.getDistortionEngine()), 
+	wavetableLibraryPicker(audioProcessor.getDistortionEngine(), vts.state.getChild(0)), 
 	valueTreeState(vts)
 {
 	// Make sure that before the constructor has finished, you've set the

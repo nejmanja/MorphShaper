@@ -19,7 +19,7 @@
 class WavetableLibraryPicker  : public juce::Component
 {
 public:
-    WavetableLibraryPicker(DistortionEngine& distortionEngine);
+    WavetableLibraryPicker(DistortionEngine& distortionEngine, juce::ValueTree libraryPathParam);
     ~WavetableLibraryPicker() override;
 
     void paint (juce::Graphics&) override;
@@ -32,6 +32,9 @@ private:
     void nextWavetable();
 
     void loadWavetableFromFile();
+    void loadWavetableFromFile(const juce::String& wtFile);
+    void updateWavetableLibraryFolder(juce::File newWtFolder);
+    void resetActiveWavetableFile();
 
     juce::TextButton wavetableLibraryLoadButton;
     juce::File wavetableLibraryFolder;
@@ -44,6 +47,7 @@ private:
     juce::TextButton prevWavetableButton, nextWavetableButton;
     std::unique_ptr<juce::FileChooser> wavetableLibraryFolderChooser;
     juce::AudioFormatManager audioFormatManager;
+    juce::ValueTree libraryPathParam;
 
     DistortionEngine& distortionEngine;
 

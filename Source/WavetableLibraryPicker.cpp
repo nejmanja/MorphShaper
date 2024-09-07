@@ -12,8 +12,8 @@
 #include "WavetableLibraryPicker.h"
 
 //==============================================================================
-WavetableLibraryPicker::WavetableLibraryPicker(DistortionEngine& distortionEngine)
-	: distortionEngine(distortionEngine)
+WavetableLibraryPicker::WavetableLibraryPicker(DistortionEngine& distortionEngine, juce::ValueTree libraryPathParam)
+	: distortionEngine(distortionEngine), libraryPathParam(libraryPathParam)
 {
 	addAndMakeVisible(wavetableLibraryLoadButton);
 	addAndMakeVisible(wavetableLibraryFolderLabel);
@@ -41,6 +41,9 @@ WavetableLibraryPicker::WavetableLibraryPicker(DistortionEngine& distortionEngin
 		{
 			nextWavetable();
 		};
+
+	updateWavetableLibraryFolder(libraryPathParam.getProperty("path").toString());
+	loadWavetableFromFile(libraryPathParam.getProperty("fileName").toString());
 }
 
 WavetableLibraryPicker::~WavetableLibraryPicker()
@@ -74,16 +77,8 @@ void WavetableLibraryPicker::chooseWavetableLibraryFolder()
 	auto folderChooserFlags = juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectDirectories;
 	wavetableLibraryFolderChooser->launchAsync(folderChooserFlags, [this](const juce::FileChooser& chooser)
 		{
-			wavetableLibraryFolder = chooser.getResult();
-			wavetableFiles = wavetableLibraryFolder.findChildFiles(juce::File::TypesOfFileToFind::findFiles, false);
-			wavetableLibraryFolderLabel.setText(wavetableLibraryFolder.getFileName(), juce::dontSendNotification);
-
-			if (!wavetableFiles.isEmpty())
-			{
-				currentWavetableFileIndex = 0;
-				currentWavetableFileLabel.setText(wavetableFiles[currentWavetableFileIndex].getFileName(), juce::dontSendNotification);
-				loadWavetableFromFile();
-			}
+			updateWavetableLibraryFolder(chooser.getResult());
+			resetActiveWavetableFile();
 		});
 }
 
@@ -121,6 +116,39 @@ void WavetableLibraryPicker::loadWavetableFromFile()
 	// TODO tell the user the file makes no sense otherwise!
 }
 
+void WavetableLibraryPicker::loadWavetableFromFile(const juce::String& wtFile)
+{
+	for (int i = 0; i < wavetableFiles.size(); ++i)
+	{
+		if (!wavetableFiles[i].getFileName().compare(wtFile))
+		{
+			currentWavetableFileIndex = i;
+			currentWavetableFileLabel.setText(wavetableFiles[currentWavetableFileIndex].getFileName(), juce::dontSendNotification);
+			loadWavetableFromFile();
+			return;
+		}
+	}
+}
+
+void WavetableLibraryPicker::updateWavetableLibraryFolder(juce::File newWtFolder)
+{
+	wavetableLibraryFolder = newWtFolder;
+	wavetableFiles = wavetableLibraryFolder.findChildFiles(juce::File::TypesOfFileToFind::findFiles, false);
+	wavetableLibraryFolderLabel.setText(wavetableLibraryFolder.getFileName(), juce::dontSendNotification);
+}
+
+void WavetableLibraryPicker::resetActiveWavetableFile()
+{
+	if (!wavetableFiles.isEmpty())
+	{
+		libraryPathParam.setProperty("path", wavetableLibraryFolder.getFullPathName(), nullptr);
+		currentWavetableFileIndex = 0;
+		libraryPathParam.setProperty("fileName", wavetableFiles[currentWavetableFileIndex].getFileName(), nullptr);
+		currentWavetableFileLabel.setText(wavetableFiles[currentWavetableFileIndex].getFileName(), juce::dontSendNotification);
+		loadWavetableFromFile();
+	}
+}
+
 void WavetableLibraryPicker::prevWavetable()
 {
 	if (!wavetableFiles.isEmpty())
@@ -128,6 +156,7 @@ void WavetableLibraryPicker::prevWavetable()
 		currentWavetableFileIndex = (currentWavetableFileIndex - 1);
 		if (currentWavetableFileIndex < 0) currentWavetableFileIndex = wavetableFiles.size() - 1;
 		loadWavetableFromFile();
+		libraryPathParam.setProperty("fileName", wavetableFiles[currentWavetableFileIndex].getFileName(), nullptr);
 		currentWavetableFileLabel.setText(wavetableFiles[currentWavetableFileIndex].getFileName(), juce::dontSendNotification);
 	}
 }
@@ -138,6 +167,7 @@ void WavetableLibraryPicker::nextWavetable()
 	{
 		currentWavetableFileIndex = (currentWavetableFileIndex + 1) % wavetableFiles.size();
 		loadWavetableFromFile();
+		libraryPathParam.setProperty("fileName", wavetableFiles[currentWavetableFileIndex].getFileName(), nullptr);
 		currentWavetableFileLabel.setText(wavetableFiles[currentWavetableFileIndex].getFileName(), juce::dontSendNotification);
 	}
 }
