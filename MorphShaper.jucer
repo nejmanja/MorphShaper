@@ -4,24 +4,36 @@
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
   <MAINGROUP id="Dr63OV" name="MorphShaper">
     <GROUP id="{6699D6CE-57FC-2D39-CA7F-8A444C7A8011}" name="Source">
-      <FILE id="tjGxR2" name="WavetableDrawer.cpp" compile="1" resource="0"
-            file="Source/WavetableDrawer.cpp"/>
-      <FILE id="zeNf7o" name="WavetableDrawer.h" compile="0" resource="0"
-            file="Source/WavetableDrawer.h"/>
+      <GROUP id="{C476D572-2B96-3E21-3784-590FD7E701F6}" name="GUI">
+        <FILE id="D8FV2y" name="DistortionEditor.cpp" compile="1" resource="0"
+              file="Source/DistortionEditor.cpp"/>
+        <FILE id="UzqDgw" name="DistortionEditor.h" compile="0" resource="0"
+              file="Source/DistortionEditor.h"/>
+        <FILE id="Lm0KLk" name="PluginEditor.cpp" compile="1" resource="0"
+              file="Source/PluginEditor.cpp"/>
+        <FILE id="kYP1BK" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+        <FILE id="Lhg8pb" name="FilterEditor.cpp" compile="1" resource="0"
+              file="Source/FilterEditor.cpp"/>
+        <FILE id="ZuWqjy" name="FilterEditor.h" compile="0" resource="0" file="Source/FilterEditor.h"/>
+        <FILE id="iZZxEW" name="WavetableLibraryPicker.cpp" compile="1" resource="0"
+              file="Source/WavetableLibraryPicker.cpp"/>
+        <FILE id="C1F5XN" name="WavetableLibraryPicker.h" compile="0" resource="0"
+              file="Source/WavetableLibraryPicker.h"/>
+        <FILE id="tjGxR2" name="WavetableDrawer.cpp" compile="1" resource="0"
+              file="Source/WavetableDrawer.cpp"/>
+        <FILE id="zeNf7o" name="WavetableDrawer.h" compile="0" resource="0"
+              file="Source/WavetableDrawer.h"/>
+      </GROUP>
+      <FILE id="vs7LIM" name="FilterPluginParameters.cpp" compile="1" resource="0"
+            file="Source/FilterPluginParameters.cpp"/>
+      <FILE id="DU9xpk" name="FilterPluginParameters.h" compile="0" resource="0"
+            file="Source/FilterPluginParameters.h"/>
       <FILE id="ImCUqz" name="Wavetable.cpp" compile="1" resource="0" file="Source/Wavetable.cpp"/>
       <FILE id="ng31oq" name="Wavetable.h" compile="0" resource="0" file="Source/Wavetable.h"/>
-      <FILE id="iZZxEW" name="WavetableLibraryPicker.cpp" compile="1" resource="0"
-            file="Source/WavetableLibraryPicker.cpp"/>
-      <FILE id="C1F5XN" name="WavetableLibraryPicker.h" compile="0" resource="0"
-            file="Source/WavetableLibraryPicker.h"/>
       <FILE id="VyaHlt" name="WavetableWaveshaper.cpp" compile="1" resource="0"
             file="Source/WavetableWaveshaper.cpp"/>
       <FILE id="E9z4Ae" name="WavetableWaveshaper.h" compile="0" resource="0"
             file="Source/WavetableWaveshaper.h"/>
-      <FILE id="D8FV2y" name="DistortionEditor.cpp" compile="1" resource="0"
-            file="Source/DistortionEditor.cpp"/>
-      <FILE id="UzqDgw" name="DistortionEditor.h" compile="0" resource="0"
-            file="Source/DistortionEditor.h"/>
       <FILE id="O332FJ" name="DistortionEngine.cpp" compile="1" resource="0"
             file="Source/DistortionEngine.cpp"/>
       <FILE id="el43la" name="DistortionEngine.h" compile="0" resource="0"
@@ -30,9 +42,6 @@
             file="Source/PluginProcessor.cpp"/>
       <FILE id="spOlXY" name="PluginProcessor.h" compile="0" resource="0"
             file="Source/PluginProcessor.h"/>
-      <FILE id="Lm0KLk" name="PluginEditor.cpp" compile="1" resource="0"
-            file="Source/PluginEditor.cpp"/>
-      <FILE id="kYP1BK" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
     </GROUP>
   </MAINGROUP>
   <MODULES>

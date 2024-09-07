@@ -12,6 +12,7 @@
 #include "PluginProcessor.h"
 #include "DistortionEditor.h"
 #include "WavetableDrawer.h"
+#include "FilterEditor.h"
 
 //==============================================================================
 /**
@@ -31,9 +32,12 @@ private:
 	// This reference is provided as a quick way for your editor to
 	// access the processor object that created it.
 	MorphShaperAudioProcessor& audioProcessor;
+	
 	DistortionEditor distortionEditor;
 	WavetableDrawer wavetableDrawer;
 	WavetableLibraryPicker wavetableLibraryPicker;
+	FilterEditor preFilterEditor, postFilterEditor;
+
 	juce::AudioProcessorValueTreeState& valueTreeState;
 	std::unique_ptr<juce::ParameterAttachment> modulationParamAttachment;
 	juce::Label titleLabel;
