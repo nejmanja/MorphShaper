@@ -73,14 +73,15 @@ Wavetable::Wavetable(std::vector<WavetableFunction> wavetableBuffer)
 
 const float Wavetable::get(float x, float t)
 {
-	// TODO cache lerped values somewhere - the value of t will change relatively sparsely compared to the sample rate
-	int maxIdx = wavetable.size() - 1;
+	if (previousParamValue != t)
+		updateInterpolatedBuffer(t);
 
-	float actualInputValue = std::clamp(t, 0.0f, 1.0f) * maxIdx;
+	float actualInputValue = std::clamp((x + 1.0f) * MORPHSHAPER_WAVETABLE_RESOLUTION / 2.0f, 0.0f, MORPHSHAPER_WAVETABLE_RESOLUTION - 1.0f);
+
 	int inputValueLow = static_cast<int>(actualInputValue);
-	if (inputValueLow == maxIdx)
+	if (inputValueLow == MORPHSHAPER_WAVETABLE_RESOLUTION - 1)
 	{
-		return wavetable[inputValueLow].get(x);
+		return interpolatedWaveform[inputValueLow];
 	}
 	else
 	{
@@ -88,7 +89,7 @@ const float Wavetable::get(float x, float t)
 
 		float lerpFactor = std::min(actualInputValue - inputValueLow, 1.0f);
 
-		return wavetable[inputValueLow].get(x) * (1.0f - lerpFactor) + wavetable[inputValueHigh].get(x) * lerpFactor;
+		return interpolatedWaveform[inputValueLow] * (1.0f - lerpFactor) + interpolatedWaveform[inputValueHigh] * lerpFactor;
 	}
 }
 
@@ -97,17 +98,23 @@ void Wavetable::set(std::vector<WavetableFunction> wavetableFunctions)
 	wavetable = wavetableFunctions;
 }
 
-void Wavetable::get(float t, float* buff)
+const std::array<float, MORPHSHAPER_WAVETABLE_RESOLUTION> Wavetable::get(float t)
 {
-	// TODO cache lerped values somewhere - the value of t will change relatively sparsely compared to the sample rate
-	// this would allow to just return that instead of calculating lerp'd values here
+	if (previousParamValue != t)
+		updateInterpolatedBuffer(t);
+	
+	return interpolatedWaveform;
+}
+
+void Wavetable::updateInterpolatedBuffer(float newValue)
+{
 	int maxIdx = wavetable.size() - 1;
 
-	float actualInputValue = std::clamp(t, 0.0f, 1.0f) * maxIdx;
+	float actualInputValue = std::clamp(newValue, 0.0f, 1.0f) * maxIdx;
 	int inputValueLow = static_cast<int>(actualInputValue);
 	if (inputValueLow == maxIdx)
 	{
-		memcpy(buff, wavetable[inputValueLow].get(), MORPHSHAPER_WAVETABLE_RESOLUTION * sizeof(float));
+		memcpy(interpolatedWaveform.data(), wavetable[inputValueLow].get(), MORPHSHAPER_WAVETABLE_RESOLUTION * sizeof(float));
 	}
 	else
 	{
@@ -119,7 +126,9 @@ void Wavetable::get(float t, float* buff)
 		auto* wavetableHigh = wavetable[inputValueHigh].get();
 		for (int i = 0; i < MORPHSHAPER_WAVETABLE_RESOLUTION; i++)
 		{
-			buff[i] = wavetableLow[i] * (1.0f - lerpFactor) + wavetableHigh[i] * lerpFactor;
+			interpolatedWaveform[i] = wavetableLow[i] * (1.0f - lerpFactor) + wavetableHigh[i] * lerpFactor;
 		}
 	}
+
+	previousParamValue = newValue;
 }

@@ -31,8 +31,6 @@ public:
     
 private:
     DistortionEngine& distortionEngine;
-
-    float currentWaveform[MORPHSHAPER_WAVETABLE_RESOLUTION] {0};
     juce::Slider preGainSlider, postGainSlider, modulationSlider;
     std::unique_ptr<SliderAttachment> modulationSliderAttachment;
     juce::Label preGainSliderLabel, postGainSliderLabel, modulationSliderLabel;

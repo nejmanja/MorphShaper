@@ -94,14 +94,14 @@ public:
 		juce::ignoreUnused(spec);
 	}
 
-	void getCurrentWavetable(float* buff)
+	const std::array<float, MORPHSHAPER_WAVETABLE_RESOLUTION> getCurrentWavetable()
 	{
-		wavetable.get(modulationParameterTarget, buff);
+		return wavetable.get(modulationParameterTarget);
 	}
 
-	void getCurrentWavetable(float* buff, float modulationParam)
+	const std::array<float, MORPHSHAPER_WAVETABLE_RESOLUTION>  getCurrentWavetable(float modulationParam)
 	{
-		wavetable.get(modulationParam, buff);
+		return wavetable.get(modulationParam);
 	}
 private:
 	Wavetable wavetable;

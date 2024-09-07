@@ -56,8 +56,6 @@ DistortionEditor::DistortionEditor(DistortionEngine& distortionEngine, juce::Aud
 	modulationSliderLabel.attachToComponent(&modulationSlider, false);
 	modulationSliderLabel.setText("Wavetable Position", juce::dontSendNotification);
 	modulationSliderLabel.setJustificationType(juce::Justification::centred);
-
-	distortionEngine.getCurrentWavetable(currentWaveform);
 }
 
 DistortionEditor::~DistortionEditor()

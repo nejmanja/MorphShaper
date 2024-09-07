@@ -26,8 +26,8 @@ public:
 	void setPreGain(float gainValue);
 	void setPostGain(float gainValue);
 
-	void getCurrentWavetable(float* buff) { processorChain.get<waveshaperIndex>().getCurrentWavetable(buff); }
-	void getCurrentWavetable(float* buff, float modulationParam) { processorChain.get<waveshaperIndex>().getCurrentWavetable(buff, modulationParam); }
+	const std::array<float, MORPHSHAPER_WAVETABLE_RESOLUTION> getCurrentWavetable() { return processorChain.get<waveshaperIndex>().getCurrentWavetable(); }
+	const std::array<float, MORPHSHAPER_WAVETABLE_RESOLUTION> getCurrentWavetable(float modulationParam) { return processorChain.get<waveshaperIndex>().getCurrentWavetable(modulationParam); }
 	void setWavetable(std::vector<WavetableFunction> wavetableFunctions) { processorChain.get<waveshaperIndex>().setWavetable(wavetableFunctions); }
 private:
 	enum

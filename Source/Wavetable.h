@@ -12,6 +12,7 @@
 #define MORPHSHAPER_WAVETABLE_RESOLUTION 512
 
 #include <vector>
+#include "JuceHeader.h"
 
 class WavetableFunction
 {
@@ -40,8 +41,13 @@ public:
 	const float get(float x, float t);
 
 	void set(std::vector<WavetableFunction> wavetableFunctions);
-	// Get the whole wavetable for an interpolation parameter t, populate already created buffer
-	void get(float t, float* buff);
+	// Get the whole wavetable for an interpolation parameter t
+	const std::array<float, MORPHSHAPER_WAVETABLE_RESOLUTION> get(float t);
 private:
 	std::vector<WavetableFunction> wavetable;
+
+	std::array<float, MORPHSHAPER_WAVETABLE_RESOLUTION> interpolatedWaveform;
+
+	float previousParamValue = 0;
+	void updateInterpolatedBuffer(float newValue);
 };

@@ -59,6 +59,6 @@ void MorphShaperAudioProcessorEditor::resized()
 
 void MorphShaperAudioProcessorEditor::modulationParameterChanged(float newValue)
 {
-	audioProcessor.getDistortionEngine().getCurrentWavetable(currentWavetable.data(), newValue);
+	currentWavetable = audioProcessor.getDistortionEngine().getCurrentWavetable(newValue);
 	wavetableDrawer.onWavetableChanged(currentWavetable.data());
 }
