@@ -15,16 +15,13 @@
 class DistortionEngine
 {
 public:
-	DistortionEngine(std::atomic<float>* wavetablePositionParameter);
+	DistortionEngine(std::atomic<float>* wavetablePositionParameter, std::atomic<float>* preGainParameter, std::atomic<float>* postGainParameter);
 	void prepare(const juce::dsp::ProcessSpec& spec) { processorChain.prepare(spec); };
 
 	template <typename ProcessContext>
 	void process(const ProcessContext& context) noexcept;
 
 	void reset() noexcept { processorChain.reset(); };
-
-	void setPreGain(float gainValue);
-	void setPostGain(float gainValue);
 
 	const std::array<float, MORPHSHAPER_WAVETABLE_RESOLUTION> getCurrentWavetable() { return processorChain.get<waveshaperIndex>().getCurrentWavetable(); }
 	const std::array<float, MORPHSHAPER_WAVETABLE_RESOLUTION> getCurrentWavetable(float modulationParam) { return processorChain.get<waveshaperIndex>().getCurrentWavetable(modulationParam); }
@@ -37,9 +34,8 @@ private:
 		postGainIndex
 	};
 	juce::dsp::ProcessorChain<juce::dsp::Gain<float>, WavetableWaveshaper, juce::dsp::Gain<float>> processorChain;
-	std::atomic<float> preGain, postGain;
 	// This gets passed along from the constructor, it's unique state that exists on the plugin-level.
-	std::atomic<float>* modulationParameter;
+	std::atomic<float>* modulationParameter, *preGainParameter, *postGainParameter;
 };
 
 template<typename ProcessContext>
@@ -49,9 +45,9 @@ inline void DistortionEngine::process(const ProcessContext& context) noexcept
 	waveshaperProcessor.setModulationParameter(*modulationParameter);
 
 	auto& preGainProcessor = processorChain.template get<preGainIndex>();
-	preGainProcessor.setGainDecibels(this->preGain);
+	preGainProcessor.setGainDecibels(*preGainParameter);
 
 	auto& postGainProcessor = processorChain.template get<postGainIndex>();
-	postGainProcessor.setGainDecibels(this->postGain);
+	postGainProcessor.setGainDecibels(*postGainParameter);
 	processorChain.process(context);
 }

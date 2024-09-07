@@ -24,27 +24,19 @@ DistortionEditor::DistortionEditor(DistortionEngine& distortionEngine, juce::Aud
 	addAndMakeVisible(preGainSliderLabel);
 	addAndMakeVisible(postGainSliderLabel);
 	addAndMakeVisible(modulationSliderLabel);
-
-	preGainSlider.setRange(-100, 30);
-	preGainSlider.setValue(30);
+	
 	preGainSlider.setSliderStyle(juce::Slider::RotaryVerticalDrag);
 	preGainSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
-	preGainSlider.onValueChange = [this]()
-	{
-		this->distortionEngine.setPreGain(static_cast<float>(preGainSlider.getValue()));
-	};
+	preGainSliderAttachment.reset(new SliderAttachment(vts, "preGain", preGainSlider));
+
 	preGainSliderLabel.attachToComponent(&preGainSlider, false);
 	preGainSliderLabel.setText("Pre Gain", juce::dontSendNotification);
 	preGainSliderLabel.setJustificationType(juce::Justification::centred);
 
-	postGainSlider.setRange(-100, 30);
-	postGainSlider.setValue(-20);
 	postGainSlider.setSliderStyle(juce::Slider::RotaryVerticalDrag);
 	postGainSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
-	postGainSlider.onValueChange = [this]()
-	{
-		this->distortionEngine.setPostGain(static_cast<float>(postGainSlider.getValue()));
-	};
+	postGainSliderAttachment.reset(new SliderAttachment(vts, "postGain", postGainSlider));
+
 	postGainSliderLabel.attachToComponent(&postGainSlider, false);
 	postGainSliderLabel.setText("Post Gain", juce::dontSendNotification);
 	postGainSliderLabel.setJustificationType(juce::Justification::centred);

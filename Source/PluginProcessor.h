@@ -60,6 +60,8 @@ public:
 private:
     juce::AudioProcessorValueTreeState parameters;
     std::atomic<float>* wavetablePositionParameter;
+    std::atomic<float>* preGainParameter;
+    std::atomic<float>* postGainParameter;
 
     std::unique_ptr<DistortionEngine> distortionEngine;
     //==============================================================================

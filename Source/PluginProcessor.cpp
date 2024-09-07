@@ -24,12 +24,16 @@ MorphShaperAudioProcessor::MorphShaperAudioProcessor()
     ,
     parameters(*this, nullptr, juce::Identifier("MorphShaper"), 
         {
-            std::make_unique<juce::AudioParameterFloat>("wtPosition", "Wavetable Position", 0.0f, 1.0f, 0.0f)
+            std::make_unique<juce::AudioParameterFloat>("wtPosition", "Wavetable Position", 0.0f, 1.0f, 0.0f),
+            std::make_unique<juce::AudioParameterFloat>("preGain", "Pre Gain", -100.0f, 30.0f, 0.0f),
+            std::make_unique<juce::AudioParameterFloat>("postGain", "Post Gain", -100.0f, 30.0f, 0.0f),
         })
 {
 
     wavetablePositionParameter = parameters.getRawParameterValue("wtPosition");
-    distortionEngine.reset(new DistortionEngine(wavetablePositionParameter));
+    preGainParameter = parameters.getRawParameterValue("preGain");
+    postGainParameter = parameters.getRawParameterValue("postGain");
+    distortionEngine.reset(new DistortionEngine(wavetablePositionParameter, preGainParameter, postGainParameter));
 }
 
 MorphShaperAudioProcessor::~MorphShaperAudioProcessor()

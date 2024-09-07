@@ -32,7 +32,7 @@ public:
 private:
     DistortionEngine& distortionEngine;
     juce::Slider preGainSlider, postGainSlider, modulationSlider;
-    std::unique_ptr<SliderAttachment> modulationSliderAttachment;
+    std::unique_ptr<SliderAttachment> preGainSliderAttachment, postGainSliderAttachment, modulationSliderAttachment;
     juce::Label preGainSliderLabel, postGainSliderLabel, modulationSliderLabel;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DistortionEditor)
 
