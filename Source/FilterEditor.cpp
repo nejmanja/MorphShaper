@@ -26,6 +26,8 @@ FilterEditor::FilterEditor(const juce::String& title, juce::AudioProcessorValueT
     frequencySliderAttachment.reset(new SliderAttachment(vts, frequencyParamID, frequencySlider));
     addAndMakeVisible(frequencyLabel);
     frequencyLabel.attachToComponent(&frequencySlider, false);
+    frequencyLabel.setText("Frequency", juce::dontSendNotification);
+    frequencyLabel.setJustificationType(juce::Justification::centred);
     
     addAndMakeVisible(resonanceSlider);
     resonanceSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
@@ -33,6 +35,8 @@ FilterEditor::FilterEditor(const juce::String& title, juce::AudioProcessorValueT
     resonanceSliderAttachment.reset(new SliderAttachment(vts, resonanceParamID, resonanceSlider));
     addAndMakeVisible(resonanceLabel);
     resonanceLabel.attachToComponent(&resonanceSlider, false);
+    resonanceLabel.setText("Resonance", juce::dontSendNotification);
+    resonanceLabel.setJustificationType(juce::Justification::centred);
 
     addAndMakeVisible(titleLabel);
     titleLabel.setText(title, juce::dontSendNotification);
