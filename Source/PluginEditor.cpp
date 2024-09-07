@@ -28,10 +28,13 @@ MorphShaperAudioProcessorEditor::MorphShaperAudioProcessorEditor(MorphShaperAudi
 	titleLabel.setText("MorphShaper", juce::dontSendNotification);
 	titleLabel.setJustificationType(juce::Justification::centred);
 	
+	auto* wtPostiionParam = vts.getParameter("wtPosition");
+	modulationParameterChanged(wtPostiionParam->getValue());
+
 	// This is the only way I could find to do this
 	// The parameter attachment is required to do repainting in a thread-safe manner...
 	modulationParamChangedCallback = std::bind(&MorphShaperAudioProcessorEditor::modulationParameterChanged, this, std::placeholders::_1);
-	modulationParamAttachment.reset(new juce::ParameterAttachment(*vts.getParameter("wtPosition"), modulationParamChangedCallback));
+	modulationParamAttachment.reset(new juce::ParameterAttachment(*wtPostiionParam, modulationParamChangedCallback));
 }
 
 MorphShaperAudioProcessorEditor::~MorphShaperAudioProcessorEditor()

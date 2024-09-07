@@ -16,9 +16,12 @@ DistortionEngine::DistortionEngine(std::atomic<float>* wavetablePositionParamete
     this->preGainParameter = preGainParameter;
     this->postGainParameter = postGainParameter;
 
+    auto& waveshaperProcessor = processorChain.template get<waveshaperIndex>();
+    waveshaperProcessor.setModulationParameter(*modulationParameter);
+
     auto& preGainProcessor = processorChain.template get<preGainIndex>();
-    preGainProcessor.setGainDecibels(30.0f);
+    preGainProcessor.setGainDecibels(*preGainParameter);
 
     auto& postGainProcessor = processorChain.template get<postGainIndex>();
-    postGainProcessor.setGainDecibels(-20.0f);
+    postGainProcessor.setGainDecibels(*postGainParameter);
 }
