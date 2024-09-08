@@ -64,6 +64,8 @@ Wavetable::Wavetable()
 
 	wavetable.push_back(WavetableFunction(linearBuff));
 	wavetable.push_back(WavetableFunction(tanhBuff));
+
+	updateInterpolatedBuffer(previousParamValue);
 }
 
 Wavetable::Wavetable(std::vector<WavetableFunction> wavetableBuffer)

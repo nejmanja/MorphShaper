@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="vIGPV8" name="MorphShaper" projectType="audioplug" useAppConfig="0"
-              addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
+              addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
+              companyName="nejmanja">
   <MAINGROUP id="Dr63OV" name="MorphShaper">
     <GROUP id="{6699D6CE-57FC-2D39-CA7F-8A444C7A8011}" name="Source">
       <GROUP id="{C476D572-2B96-3E21-3784-590FD7E701F6}" name="GUI">
@@ -43,6 +44,7 @@
       <FILE id="spOlXY" name="PluginProcessor.h" compile="0" resource="0"
             file="Source/PluginProcessor.h"/>
     </GROUP>
+    <FILE id="JcMyLg" name="icon.png" compile="0" resource="1" file="icon.png"/>
   </MAINGROUP>
   <MODULES>
     <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
@@ -62,7 +64,7 @@
   </MODULES>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>
   <EXPORTFORMATS>
-    <VS2022 targetFolder="Builds/VisualStudio2022">
+    <VS2022 targetFolder="Builds/VisualStudio2022" smallIcon="JcMyLg" bigIcon="JcMyLg">
       <CONFIGURATIONS>
         <CONFIGURATION isDebug="1" name="Debug" targetName="MorphShaper"/>
         <CONFIGURATION isDebug="0" name="Release" targetName="MorphShaper"/>
