@@ -13,7 +13,7 @@
 
 //==============================================================================
 WavetableLibraryPicker::WavetableLibraryPicker(DistortionEngine& distortionEngine, juce::ValueTree libraryPathParam)
-	: distortionEngine(distortionEngine), libraryPathParam(libraryPathParam)
+	: distortionEngine(distortionEngine), libraryPathParam(libraryPathParam), symmetricMode(true), forceAscending(false)
 {
 	addAndMakeVisible(wavetableLibraryLoadButton);
 	addAndMakeVisible(wavetableLibraryFolderLabel);
@@ -103,6 +103,12 @@ void WavetableLibraryPicker::loadWavetableFromFile()
 				wavetableBuffer[j] = tempBuffer[j * 4];
 			}
 			delete[] tempBuffer;
+
+			if (symmetricMode)
+			{
+				transformDataToSymmetric();
+			}
+
 			funcs.push_back(WavetableFunction(wavetableBuffer));
 		}
 		// The caller is responsible to free the reader
@@ -114,6 +120,25 @@ void WavetableLibraryPicker::loadWavetableFromFile()
 		repaint();
 	}
 	// TODO tell the user the file makes no sense otherwise!
+}
+
+void WavetableLibraryPicker::transformDataToSymmetric()
+{
+	// fill the upper half of the buffer with "squished" signal
+	for (int i = MORPHSHAPER_WAVETABLE_RESOLUTION - 1, j = i - 1; i >= MORPHSHAPER_WAVETABLE_RESOLUTION / 2; i--, j-=2)
+	{
+		wavetableBuffer[i] = wavetableBuffer[j];
+		if(forceAscending) wavetableBuffer[i] = wavetableBuffer[i] * 0.5f + 0.5f;
+	}
+
+	// symmetrically copy over right side of the buffer
+	for (int i = 0; i < MORPHSHAPER_WAVETABLE_RESOLUTION / 2; i++)
+	{
+		wavetableBuffer[i] = -wavetableBuffer[i + MORPHSHAPER_WAVETABLE_RESOLUTION / 2];
+	}
+
+	// zero out the middle part
+	wavetableBuffer[MORPHSHAPER_WAVETABLE_RESOLUTION / 2] = 0;
 }
 
 void WavetableLibraryPicker::loadWavetableFromFile(const juce::String& wtFile)

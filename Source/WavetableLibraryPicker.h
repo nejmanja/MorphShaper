@@ -32,6 +32,7 @@ private:
     void nextWavetable();
 
     void loadWavetableFromFile();
+    void transformDataToSymmetric();
     void loadWavetableFromFile(const juce::String& wtFile);
     void updateWavetableLibraryFolder(juce::File newWtFolder);
     void resetActiveWavetableFile();
@@ -40,6 +41,7 @@ private:
     juce::File wavetableLibraryFolder;
     juce::Array<juce::File> wavetableFiles;
     int currentWavetableFileIndex;
+    bool symmetricMode, forceAscending;
 
     float* wavetableBuffer = nullptr;
 
