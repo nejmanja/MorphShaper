@@ -55,7 +55,7 @@ void WavetableDrawer::generateWavetablePath(juce::Rectangle<int> bounds)
 {
 	if (!wavetable) return;
 
-	const int increment = 8;
+	const int increment = 4;
 	float widthScale = static_cast<float>(bounds.getWidth() - 2) / MORPHSHAPER_WAVETABLE_RESOLUTION;
 	float heightScale = bounds.getHeight() / 2;
 

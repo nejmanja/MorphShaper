@@ -134,7 +134,7 @@ void WavetableLibraryPicker::transformDataToSymmetric()
 	// symmetrically copy over right side of the buffer
 	for (int i = 0; i < MORPHSHAPER_WAVETABLE_RESOLUTION / 2; i++)
 	{
-		wavetableBuffer[i] = -wavetableBuffer[i + MORPHSHAPER_WAVETABLE_RESOLUTION / 2];
+		wavetableBuffer[i] = -wavetableBuffer[MORPHSHAPER_WAVETABLE_RESOLUTION - 1 - i];
 	}
 
 	// zero out the middle part
