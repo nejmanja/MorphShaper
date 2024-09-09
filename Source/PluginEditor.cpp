@@ -51,6 +51,10 @@ void MorphShaperAudioProcessorEditor::paint(juce::Graphics& g)
 {
 	// (Our component is opaque, so we must completely fill the background with a solid colour)
 	g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
+
+	int separatorY = (getHeight() / 3 + 3 + 12);
+	g.setColour(getLookAndFeel().findColour(juce::Slider::thumbColourId).darker(0.9f));
+	g.fillRect(0, separatorY, getWidth(), getHeight());
 }
 
 void MorphShaperAudioProcessorEditor::resized()
@@ -64,6 +68,7 @@ void MorphShaperAudioProcessorEditor::resized()
 	wavetableDrawer.setBounds(upperHalf.removeFromRight(halfWidth));
 	wavetableLibraryPicker.setBounds(upperHalf);
 	
+	bounds.removeFromTop(6); // some padding between sections
 	preFilterEditor.setBounds(bounds.removeFromLeft(quarterWidth));
 	postFilterEditor.setBounds(bounds.removeFromRight(quarterWidth));
 	distortionEditor.setBounds(bounds);
