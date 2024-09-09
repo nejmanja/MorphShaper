@@ -26,8 +26,15 @@ void WavetableDrawer::paint(juce::Graphics& g)
 {
 	if (!wavetable) return;
 
-	g.setColour(getLookAndFeel().findColour(juce::Slider::thumbColourId));
+	float width = static_cast<float>(getWidth());
+	float height = static_cast<float>(getHeight());
 
+	g.setColour(getLookAndFeel().findColour(juce::Slider::rotarySliderFillColourId));
+	g.drawLine(width / 2, 0, width / 2, height, 1);
+	g.drawLine(0, height / 2, width, height / 2, 1);
+
+
+	g.setColour(getLookAndFeel().findColour(juce::Slider::thumbColourId));
 	g.strokePath(wavetablePath, juce::PathStrokeType(2.0f));
 
 	g.setColour(getLookAndFeel().findColour(juce::Slider::rotarySliderFillColourId));
@@ -39,15 +46,13 @@ void WavetableDrawer::resized()
 	generateWavetablePath(getLocalBounds());
 }
 
-void WavetableDrawer::onWavetableChanged(float* newWavetable)
+void WavetableDrawer::onWavetableChanged(const float* newWavetable)
 {
 	wavetable = newWavetable;
 	auto bounds = getLocalBounds();
 
 	generateWavetablePath(bounds);
 
-	// Make sure to get exclusive rights before sending stuff to components!
-	const juce::MessageManagerLock mmLock;
 	repaint();
 }
 

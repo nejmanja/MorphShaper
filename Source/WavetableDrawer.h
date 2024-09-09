@@ -25,7 +25,7 @@ public:
 	void paint(juce::Graphics&) override;
 	void resized() override;
 
-	void onWavetableChanged(float* newWavetable);
+	void onWavetableChanged(const float* newWavetable);
 
 private:
 	juce::Point<float> getPointInWavetable(int sampleIdx, juce::Rectangle<int> bounds, float widthScale, float heightScale);

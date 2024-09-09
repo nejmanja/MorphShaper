@@ -12,14 +12,18 @@
 #include "WavetableLibraryPicker.h"
 
 //==============================================================================
-WavetableLibraryPicker::WavetableLibraryPicker(DistortionEngine& distortionEngine, juce::ValueTree libraryPathParam)
-	: distortionEngine(distortionEngine), libraryPathParam(libraryPathParam), symmetricMode(true), forceAscending(false)
+WavetableLibraryPicker::WavetableLibraryPicker(DistortionEngine& distortionEngine, WavetableDrawer& drawer, juce::ValueTree libraryPathParam)
+	: distortionEngine(distortionEngine), libraryPathParam(libraryPathParam), symmetricMode(true), ascendingMode(false), drawer(drawer)
 {
 	addAndMakeVisible(wavetableLibraryLoadButton);
 	addAndMakeVisible(wavetableLibraryFolderLabel);
 	addAndMakeVisible(currentWavetableFileLabel);
 	addAndMakeVisible(prevWavetableButton);
 	addAndMakeVisible(nextWavetableButton);
+	addAndMakeVisible(symmetricModeButton);
+	addAndMakeVisible(ascendingModeButton);
+	addAndMakeVisible(symmetricModeLabel);
+	addAndMakeVisible(ascendingModeLabel);
 
 	audioFormatManager.registerBasicFormats();
 
@@ -42,6 +46,27 @@ WavetableLibraryPicker::WavetableLibraryPicker(DistortionEngine& distortionEngin
 			nextWavetable();
 		};
 
+	symmetricModeButton.setClickingTogglesState(true);
+	symmetricModeButton.setToggleState(symmetricMode, juce::dontSendNotification);
+	symmetricModeButton.onClick = [this]()
+		{
+			symmetricMode = symmetricModeButton.getToggleState();
+			// the ascending mode makes sense only when using symmetric
+			ascendingModeButton.setEnabled(symmetricMode);
+			ascendingModeLabel.setEnabled(symmetricMode);
+			loadWavetableFromFile();
+		};
+	symmetricModeLabel.setText("Symmetric mode", juce::dontSendNotification);
+
+	ascendingModeButton.setClickingTogglesState(true);
+	ascendingModeButton.setToggleState(ascendingMode, juce::dontSendNotification);
+	ascendingModeButton.onClick = [this]()
+		{
+			ascendingMode = ascendingModeButton.getToggleState();
+			loadWavetableFromFile();
+		};
+	ascendingModeLabel.setText("Ascending mode", juce::dontSendNotification);
+
 	updateWavetableLibraryFolder(libraryPathParam.getProperty("path").toString());
 	loadWavetableFromFile(libraryPathParam.getProperty("fileName").toString());
 }
@@ -58,16 +83,25 @@ void WavetableLibraryPicker::paint(juce::Graphics& g)
 
 void WavetableLibraryPicker::resized()
 {
-	// This method is where you should set the bounds of any child
-	// components that your component contains..
+	const int footerHeight = 20;
+	const int checkboxWidth = 24;
 	auto bounds = getLocalBounds();
+	auto togglesBounds = bounds.removeFromBottom(footerHeight);
 	auto thirdHeight = bounds.getHeight() / 3;
 	auto smallButtonWidth = bounds.getWidth() / 8;
 	wavetableLibraryLoadButton.setBounds(bounds.removeFromTop(thirdHeight));
 	wavetableLibraryFolderLabel.setBounds(bounds.removeFromTop(thirdHeight));
+
 	prevWavetableButton.setBounds(bounds.removeFromLeft(smallButtonWidth));
 	nextWavetableButton.setBounds(bounds.removeFromRight(smallButtonWidth));
 	currentWavetableFileLabel.setBounds(bounds);
+
+	auto symmetricModeBounds = togglesBounds.removeFromLeft(togglesBounds.getWidth() / 2);
+	symmetricModeButton.setBounds(symmetricModeBounds.removeFromLeft(checkboxWidth));
+	symmetricModeLabel.setBounds(symmetricModeBounds);
+
+	ascendingModeButton.setBounds(togglesBounds.removeFromLeft(checkboxWidth));
+	ascendingModeLabel.setBounds(togglesBounds);
 }
 
 void WavetableLibraryPicker::chooseWavetableLibraryFolder()
@@ -117,7 +151,7 @@ void WavetableLibraryPicker::loadWavetableFromFile()
 
 		distortionEngine.setWavetable(funcs);
 
-		repaint();
+		drawer.onWavetableChanged(distortionEngine.getCurrentWavetable().data());
 	}
 	// TODO tell the user the file makes no sense otherwise!
 }
@@ -125,10 +159,10 @@ void WavetableLibraryPicker::loadWavetableFromFile()
 void WavetableLibraryPicker::transformDataToSymmetric()
 {
 	// fill the upper half of the buffer with "squished" signal
-	for (int i = MORPHSHAPER_WAVETABLE_RESOLUTION - 1, j = i - 1; i >= MORPHSHAPER_WAVETABLE_RESOLUTION / 2; i--, j-=2)
+	for (int i = MORPHSHAPER_WAVETABLE_RESOLUTION - 1, j = i - 1; i >= MORPHSHAPER_WAVETABLE_RESOLUTION / 2; i--, j -= 2)
 	{
 		wavetableBuffer[i] = wavetableBuffer[j];
-		if(forceAscending) wavetableBuffer[i] = wavetableBuffer[i] * 0.5f + 0.5f;
+		if (ascendingMode) wavetableBuffer[i] = wavetableBuffer[i] * 0.5f + 0.5f;
 	}
 
 	// symmetrically copy over right side of the buffer

@@ -98,6 +98,8 @@ const float Wavetable::get(float x, float t)
 void Wavetable::set(std::vector<WavetableFunction> wavetableFunctions)
 {
 	wavetable = wavetableFunctions;
+	// refresh interpolated buffer with new funcs
+	updateInterpolatedBuffer(previousParamValue);
 }
 
 const std::array<float, MORPHSHAPER_WAVETABLE_RESOLUTION> Wavetable::get(float t)

@@ -14,7 +14,7 @@ MorphShaperAudioProcessorEditor::MorphShaperAudioProcessorEditor(MorphShaperAudi
 	: AudioProcessorEditor(&p),
 	audioProcessor(p),
 	distortionEditor(audioProcessor.getDistortionEngine(), vts),
-	wavetableLibraryPicker(audioProcessor.getDistortionEngine(), vts.state.getChild(0)),
+	wavetableLibraryPicker(audioProcessor.getDistortionEngine(), wavetableDrawer, vts.state.getChild(0)),
 	valueTreeState(vts),
 	preFilterEditor("Filter (pre)", vts, "preFilterCutoff", "preFilterResonance", "preFilterEnabled", "preFilterType"),
 	postFilterEditor("Filter (post)", vts, "postFilterCutoff", "postFilterResonance", "postFilterEnabled", "postFilterType")

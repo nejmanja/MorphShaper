@@ -12,6 +12,7 @@
 
 #include <JuceHeader.h>
 #include "DistortionEngine.h"
+#include "WavetableDrawer.h"
 
 //==============================================================================
 /*
@@ -19,7 +20,7 @@
 class WavetableLibraryPicker  : public juce::Component
 {
 public:
-    WavetableLibraryPicker(DistortionEngine& distortionEngine, juce::ValueTree libraryPathParam);
+    WavetableLibraryPicker(DistortionEngine& distortionEngine, WavetableDrawer& drawer, juce::ValueTree libraryPathParam);
     ~WavetableLibraryPicker() override;
 
     void paint (juce::Graphics&) override;
@@ -37,11 +38,17 @@ private:
     void updateWavetableLibraryFolder(juce::File newWtFolder);
     void resetActiveWavetableFile();
 
+    // The library picker refreshes the drawer upon loading a WT from a file
+    WavetableDrawer& drawer;
+
     juce::TextButton wavetableLibraryLoadButton;
     juce::File wavetableLibraryFolder;
     juce::Array<juce::File> wavetableFiles;
     int currentWavetableFileIndex;
-    bool symmetricMode, forceAscending;
+
+    juce::ToggleButton symmetricModeButton, ascendingModeButton;
+    juce::Label symmetricModeLabel, ascendingModeLabel;
+    bool symmetricMode, ascendingMode;
 
     float* wavetableBuffer = nullptr;
 
