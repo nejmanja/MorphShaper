@@ -24,6 +24,8 @@ public:
 
 	void reset() noexcept { processorChain.reset(); };
 
+	void setLfoModulatorValue(float newValue) { lfoModulatorValue = newValue; }
+
 	const std::array<float, MORPHSHAPER_WAVETABLE_RESOLUTION> getCurrentWavetable() { return processorChain.get<waveshaperIndex>().getCurrentWavetable(); }
 	const std::array<float, MORPHSHAPER_WAVETABLE_RESOLUTION> getCurrentWavetable(float modulationParam) { return processorChain.get<waveshaperIndex>().getCurrentWavetable(modulationParam); }
 	void setWavetable(std::vector<WavetableFunction> wavetableFunctions) { processorChain.get<waveshaperIndex>().setWavetable(wavetableFunctions); }
@@ -48,6 +50,8 @@ private:
 
 	void setFilterParams(juce::dsp::StateVariableTPTFilter<float>& filter, FilterPluginParameters& params);
 
+	float lfoModulatorValue;
+
 	// This gets passed along from the constructor, it's unique state that exists on the plugin-level.
 	std::atomic<float>* modulationParameter, * preGainParameter, * postGainParameter;
 	FilterPluginParameters preFilterParams, postFilterParams;
@@ -57,7 +61,7 @@ template<typename ProcessContext>
 inline void DistortionEngine::process(const ProcessContext& context) noexcept
 {
 	auto& waveshaperProcessor = processorChain.get<waveshaperIndex>();
-	waveshaperProcessor.setModulationParameter(*modulationParameter);
+	waveshaperProcessor.setModulationParameter(juce::jlimit(0.0f, 1.0f, *modulationParameter + lfoModulatorValue));
 
 	auto& preGainProcessor = processorChain.template get<preGainIndex>();
 	preGainProcessor.setGainDecibels(*preGainParameter);

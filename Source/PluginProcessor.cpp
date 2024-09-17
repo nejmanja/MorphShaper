@@ -45,8 +45,8 @@ MorphShaperAudioProcessor::MorphShaperAudioProcessor()
 	parameters.state.addChild(libraryPathParam, 0, nullptr);
 	wavetablePositionParameter = parameters.getRawParameterValue("wtPosition");
 	preGainParameter = parameters.getRawParameterValue("preGain");
-	postGainParameter = parameters.getRawParameterValue("postGain"); 
-	
+	postGainParameter = parameters.getRawParameterValue("postGain");
+
 	distortionEngine.reset(new DistortionEngine(
 		wavetablePositionParameter,
 		preGainParameter,
@@ -59,13 +59,16 @@ MorphShaperAudioProcessor::MorphShaperAudioProcessor()
 			parameters.getRawParameterValue("preFilterType")
 		},
 		FilterPluginParameters
-		{ 
-			parameters.getRawParameterValue("postFilterCutoff"), 
+		{
+			parameters.getRawParameterValue("postFilterCutoff"),
 			parameters.getRawParameterValue("postFilterResonance"),
 			parameters.getRawParameterValue("postFilterEnabled"),
 			parameters.getRawParameterValue("postFilterType")
 		}
 	));
+
+	lfo.initialise([](float x) { return std::sin(x); }, 128);
+	lfo.setFrequency(3.0f);
 }
 
 MorphShaperAudioProcessor::~MorphShaperAudioProcessor()
@@ -144,6 +147,8 @@ void MorphShaperAudioProcessor::prepareToPlay(double sampleRate, int samplesPerB
 	// Use this method as the place to do any pre-playback
 	// initialisation that you need..
 	distortionEngine->prepare({ sampleRate, (juce::uint32)samplesPerBlock, (juce::uint32)getTotalNumOutputChannels() });
+	
+	lfo.prepare({ sampleRate / lfoUpdateRate, (juce::uint32)samplesPerBlock, (juce::uint32)getTotalNumOutputChannels() });
 }
 
 void MorphShaperAudioProcessor::releaseResources()
@@ -197,6 +202,18 @@ void MorphShaperAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, j
 
 	auto block = juce::dsp::AudioBlock<float>(buffer);
 	auto context = juce::dsp::ProcessContextReplacing<float>(block);
+
+	auto max = juce::jmin((size_t)buffer.getNumSamples(), lfoUpdateCounter);
+	lfoUpdateCounter -= max;
+
+	if (lfoUpdateCounter == 0)
+	{
+		lfoUpdateCounter = lfoUpdateRate;
+		auto lfoOut = lfo.processSample(0.0f);
+		auto modulatorValue = juce::jmap(lfoOut, -1.0f, 1.0f, -0.5f, 0.5f);
+		distortionEngine->setLfoModulatorValue(modulatorValue);
+	}
+
 	distortionEngine->process(context);
 }
 

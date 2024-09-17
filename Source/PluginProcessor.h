@@ -58,6 +58,10 @@ public:
     DistortionEngine& getDistortionEngine() { return *distortionEngine; }
 
 private:
+    static constexpr size_t lfoUpdateRate = 100;
+    size_t lfoUpdateCounter = lfoUpdateRate;
+    juce::dsp::Oscillator<float> lfo;
+
     juce::AudioProcessorValueTreeState parameters;
     std::atomic<float>* wavetablePositionParameter;
     std::atomic<float>* preGainParameter;
