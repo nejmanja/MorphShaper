@@ -18,15 +18,18 @@
 class LFOEditor  : public juce::Component
 {
 public:
-    LFOEditor(std::atomic<float>* frequencyParamter);
+    LFOEditor(juce::AudioProcessorValueTreeState& vts);
     ~LFOEditor() override;
 
     void paint (juce::Graphics&) override;
     void resized() override;
 
 private:
+    typedef juce::AudioProcessorValueTreeState::SliderAttachment SliderAttachment;
+
     juce::ComboBox lfoTypeComboBox;
     juce::Slider frequencySlider;
+    std::unique_ptr<SliderAttachment> frequencySliderAttachment;
 
     std::atomic<float>* frequencyParameter;
 

@@ -12,9 +12,8 @@
 #include "LFOEditor.h"
 
 //==============================================================================
-LFOEditor::LFOEditor(std::atomic<float>* frequencyParamter)
+LFOEditor::LFOEditor(juce::AudioProcessorValueTreeState& vts)
 {
-    this->frequencyParameter = frequencyParamter;
     addAndMakeVisible(lfoTypeComboBox);
     lfoTypeComboBox.addItemList({ "Sine", "Triangle", "Saw", "Square" }, 1);
 
@@ -22,11 +21,7 @@ LFOEditor::LFOEditor(std::atomic<float>* frequencyParamter)
     frequencySlider.setSliderStyle(juce::Slider::LinearHorizontal);
     frequencySlider.setTextBoxStyle(juce::Slider::TextBoxLeft, false, 50, 20);
     frequencySlider.setRange(1.0, 20.0);
-    frequencySlider.onValueChange = [this]()
-        {
-            *frequencyParameter = frequencySlider.getValue();
-        };
-
+    frequencySliderAttachment.reset(new SliderAttachment(vts, "lfoFrequency", frequencySlider));
 }
 
 LFOEditor::~LFOEditor()

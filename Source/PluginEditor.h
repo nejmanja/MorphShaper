@@ -21,7 +21,7 @@
 class MorphShaperAudioProcessorEditor : public juce::AudioProcessorEditor
 {
 public:
-	MorphShaperAudioProcessorEditor(MorphShaperAudioProcessor&, std::atomic<float>* lfoFrequencyParam, juce::AudioProcessorValueTreeState&);
+	MorphShaperAudioProcessorEditor(MorphShaperAudioProcessor&, juce::AudioProcessorValueTreeState&);
 	~MorphShaperAudioProcessorEditor() override;
 
 	//==============================================================================

@@ -23,20 +23,7 @@ MorphShaperAudioProcessor::MorphShaperAudioProcessor()
 	)
 #endif
 	,
-	parameters(*this, nullptr, juce::Identifier("MorphShaper"),
-		{
-			std::make_unique<juce::AudioParameterFloat>("wtPosition", "Wavetable Position", 0.0f, 1.0f, 0.0f),
-			std::make_unique<juce::AudioParameterFloat>("preGain", "Pre Gain", -100.0f, 30.0f, 0.0f),
-			std::make_unique<juce::AudioParameterFloat>("postGain", "Post Gain", -100.0f, 30.0f, 0.0f),
-			std::make_unique<juce::AudioParameterBool>("preFilterEnabled", "Pre Filter Enabled", false),
-			std::make_unique<juce::AudioParameterChoice>("preFilterType", "Pre Filter Type", juce::StringArray{"Lowpass", "HighPass", "BandPass"}, 0),
-			std::make_unique<juce::AudioParameterFloat>("preFilterCutoff", "Pre Filter Cutoff Frequency", juce::NormalisableRange<float>(20, 20000, 0, 0.7f), 1000.0f),
-			std::make_unique<juce::AudioParameterFloat>("preFilterResonance", "Pre Filter Resonance", juce::NormalisableRange<float>(0.5f, 10.0f, 0.0f, 0.7f), 0.7f),
-			std::make_unique<juce::AudioParameterBool>("postFilterEnabled", "Post Filter Enabled", false),
-			std::make_unique<juce::AudioParameterChoice>("postFilterType", "Post Filter Type", juce::StringArray{"Lowpass", "HighPass", "BandPass"}, 0),
-			std::make_unique<juce::AudioParameterFloat>("postFilterCutoff", "Post Filter Cutoff Frequency", juce::NormalisableRange<float>(20, 20000, 0, 0.7f), 1000.0f),
-			std::make_unique<juce::AudioParameterFloat>("postFilterResonance", "Post Filter Resonance", juce::NormalisableRange<float>(0.5f, 10.0f, 0.0f, 0.7f), 0.7f),
-		})
+	parameters(createPluginParameters())
 {
 	juce::ValueTree libraryPathParam(juce::Identifier("wtLibraryPath"));
 	libraryPathParam.setProperty("path", "", nullptr);
@@ -45,6 +32,8 @@ MorphShaperAudioProcessor::MorphShaperAudioProcessor()
 	wavetablePositionParameter = parameters.getRawParameterValue("wtPosition");
 	preGainParameter = parameters.getRawParameterValue("preGain");
 	postGainParameter = parameters.getRawParameterValue("postGain");
+
+	lfoFrequencyParameter = parameters.getRawParameterValue("lfoFrequency");
 
 	distortionEngine.reset(new DistortionEngine(
 		wavetablePositionParameter,
@@ -66,10 +55,8 @@ MorphShaperAudioProcessor::MorphShaperAudioProcessor()
 		}
 	));
 
-
-	lfoFrequencyParameter = 3.0f;
 	lfo.initialise([](float x) { return std::sin(x); }, 128);
-	lfo.setFrequency(lfoFrequencyParameter);
+	lfo.setFrequency(*lfoFrequencyParameter);
 }
 
 MorphShaperAudioProcessor::~MorphShaperAudioProcessor()
@@ -204,8 +191,8 @@ void MorphShaperAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, j
 	auto block = juce::dsp::AudioBlock<float>(buffer);
 	auto context = juce::dsp::ProcessContextReplacing<float>(block);
 
-	if (lfoFrequencyParameter != lfo.getFrequency())
-		lfo.setFrequency(lfoFrequencyParameter);
+	if (*lfoFrequencyParameter != lfo.getFrequency())
+		lfo.setFrequency(*lfoFrequencyParameter);
 
 	auto max = juce::jmin((size_t)buffer.getNumSamples(), lfoUpdateCounter);
 	lfoUpdateCounter -= max;	
@@ -229,7 +216,7 @@ bool MorphShaperAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* MorphShaperAudioProcessor::createEditor()
 {
-	return new MorphShaperAudioProcessorEditor(*this, &lfoFrequencyParameter, parameters);
+	return new MorphShaperAudioProcessorEditor(*this, parameters);
 }
 
 //==============================================================================
@@ -256,6 +243,32 @@ void MorphShaperAudioProcessor::setStateInformation(const void* data, int sizeIn
 			parameters.replaceState(juce::ValueTree::fromXml(*xmlState));
 		}
 	}
+}
+
+juce::AudioProcessorValueTreeState MorphShaperAudioProcessor::createPluginParameters()
+{
+	return { 
+		*this, 
+		nullptr, 
+		juce::Identifier("MorphShaper"),
+		{
+			std::make_unique<juce::AudioParameterFloat>("wtPosition", "Wavetable Position", 0.0f, 1.0f, 0.0f),
+			std::make_unique<juce::AudioParameterFloat>("preGain", "Pre Gain", -100.0f, 30.0f, 0.0f),
+			std::make_unique<juce::AudioParameterFloat>("postGain", "Post Gain", -100.0f, 30.0f, 0.0f),
+
+			std::make_unique<juce::AudioParameterBool>("preFilterEnabled", "Pre Filter Enabled", false),
+			std::make_unique<juce::AudioParameterChoice>("preFilterType", "Pre Filter Type", juce::StringArray{"Lowpass", "HighPass", "BandPass"}, 0),
+			std::make_unique<juce::AudioParameterFloat>("preFilterCutoff", "Pre Filter Cutoff Frequency", juce::NormalisableRange<float>(20, 20000, 0, 0.7f), 1000.0f),
+			std::make_unique<juce::AudioParameterFloat>("preFilterResonance", "Pre Filter Resonance", juce::NormalisableRange<float>(0.5f, 10.0f, 0.0f, 0.7f), 0.7f),
+
+			std::make_unique<juce::AudioParameterBool>("postFilterEnabled", "Post Filter Enabled", false),
+			std::make_unique<juce::AudioParameterChoice>("postFilterType", "Post Filter Type", juce::StringArray{"Lowpass", "HighPass", "BandPass"}, 0),
+			std::make_unique<juce::AudioParameterFloat>("postFilterCutoff", "Post Filter Cutoff Frequency", juce::NormalisableRange<float>(20, 20000, 0, 0.7f), 1000.0f),
+			std::make_unique<juce::AudioParameterFloat>("postFilterResonance", "Post Filter Resonance", juce::NormalisableRange<float>(0.5f, 10.0f, 0.0f, 0.7f), 0.7f),
+
+			std::make_unique<juce::AudioParameterFloat>("lfoFrequency", "LFO frequency", juce::NormalisableRange<float>(1.0f, 20.0f), 3.0f)
+		}
+	};
 }
 
 //==============================================================================
