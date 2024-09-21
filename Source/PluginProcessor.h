@@ -72,7 +72,7 @@ private:
     std::atomic<float>* preGainParameter;
     std::atomic<float>* postGainParameter;
     
-    std::atomic<float>* lfoFrequencyParameter;
+    std::atomic<float>* lfoFrequencyParameter, * lfoIntensityParameter;
     std::atomic<float>* lfoOutput;
 
     std::unique_ptr<DistortionEngine> distortionEngine;

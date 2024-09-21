@@ -14,6 +14,7 @@
 #include "WavetableDrawer.h"
 #include "FilterEditor.h"
 #include "LFOEditor.h"
+#include "ModulationMatrix.h"
 
 //==============================================================================
 /**
@@ -21,7 +22,7 @@
 class MorphShaperAudioProcessorEditor : public juce::AudioProcessorEditor
 {
 public:
-	MorphShaperAudioProcessorEditor(MorphShaperAudioProcessor&, juce::AudioProcessorValueTreeState&);
+	MorphShaperAudioProcessorEditor(MorphShaperAudioProcessor&, juce::AudioProcessorValueTreeState&, ModulationMatrix&);
 	~MorphShaperAudioProcessorEditor() override;
 
 	//==============================================================================

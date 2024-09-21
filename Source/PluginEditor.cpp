@@ -10,10 +10,10 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-MorphShaperAudioProcessorEditor::MorphShaperAudioProcessorEditor(MorphShaperAudioProcessor& p, juce::AudioProcessorValueTreeState& vts)
+MorphShaperAudioProcessorEditor::MorphShaperAudioProcessorEditor(MorphShaperAudioProcessor& p, juce::AudioProcessorValueTreeState& vts, ModulationMatrix& modulationMatrix)
 	: AudioProcessorEditor(&p),
 	audioProcessor(p),
-	lfoEditor(vts),
+	lfoEditor(vts, modulationMatrix),
 	distortionEditor(audioProcessor.getDistortionEngine(), vts),
 	wavetableLibraryPicker(audioProcessor.getDistortionEngine(), wavetableDrawer, vts.state.getChild(0)),
 	valueTreeState(vts),

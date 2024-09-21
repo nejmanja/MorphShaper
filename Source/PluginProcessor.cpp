@@ -35,7 +35,8 @@ MorphShaperAudioProcessor::MorphShaperAudioProcessor()
 	preGainParameter = parameters.getRawParameterValue("preGain");
 	postGainParameter = parameters.getRawParameterValue("postGain");
 
-	lfoFrequencyParameter = parameters.getRawParameterValue("lfoFrequency");
+	lfoFrequencyParameter = parameters.getRawParameterValue("lfo1Frequency");
+	lfoIntensityParameter = parameters.getRawParameterValue("lfo1Intensity");
 
 	distortionEngine.reset(new DistortionEngine(
 		*modulationMatrix,
@@ -208,8 +209,7 @@ void MorphShaperAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, j
 	{
 		lfoUpdateCounter = lfoUpdateRate;
 		auto lfoOut = lfo.processSample(0.0f);
-		*lfoOutput = juce::jmap(lfoOut, -1.0f, 1.0f, -0.5f, 0.5f);
-		//distortionEngine->setLfoModulatorValue(modulatorValue);
+		*lfoOutput = juce::jmap(lfoOut, -1.0f, 1.0f, -0.5f, 0.5f) * *lfoIntensityParameter;
 	}
 
 	distortionEngine->process(context);
@@ -223,7 +223,7 @@ bool MorphShaperAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* MorphShaperAudioProcessor::createEditor()
 {
-	return new MorphShaperAudioProcessorEditor(*this, parameters);
+	return new MorphShaperAudioProcessorEditor(*this, parameters, *modulationMatrix);
 }
 
 //==============================================================================
@@ -273,7 +273,8 @@ juce::AudioProcessorValueTreeState MorphShaperAudioProcessor::createPluginParame
 			std::make_unique<juce::AudioParameterFloat>("postFilterCutoff", "Post Filter Cutoff Frequency", juce::NormalisableRange<float>(20, 20000, 0, 0.7f), 1000.0f),
 			std::make_unique<juce::AudioParameterFloat>("postFilterResonance", "Post Filter Resonance", juce::NormalisableRange<float>(0.5f, 10.0f, 0.0f, 0.7f), 0.7f),
 
-			std::make_unique<juce::AudioParameterFloat>("lfoFrequency", "LFO frequency", juce::NormalisableRange<float>(1.0f, 20.0f), 3.0f)
+			std::make_unique<juce::AudioParameterFloat>("lfo1Frequency", "LFO1 frequency", juce::NormalisableRange<float>(1.0f, 20.0f), 3.0f),
+			std::make_unique<juce::AudioParameterFloat>("lfo1Intensity", "LFO1 modulation intensity", juce::NormalisableRange<float>(0.0f, 1.0f), 0.0f)
 		}
 	};
 }

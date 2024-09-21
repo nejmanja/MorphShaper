@@ -39,6 +39,17 @@ public:
 
     void setModulationDestination(ModulationSource source, ModulationDestination destination)
     {
+        // remove the modulation from the old destination
+        for (int i = 0; i < MORPHSHAPER_NUM_DESTINATIONS; i++)
+        {
+            if (modulationMatrix[i] == source)
+            {
+                modulationMatrix[i] = ModulationSource::None;
+                break;
+            }
+        }
+
+        // route to new destination
         modulationMatrix[static_cast<int>(destination)] = source;
     }
 

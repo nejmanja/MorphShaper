@@ -35,5 +35,5 @@ void DistortionEngine::setFilterParams(juce::dsp::StateVariableTPTFilter<float>&
 {
 	filter.setCutoffFrequency(params.getFrequency());
 	filter.setResonance(params.getResonance());
-	filter.setType(params.getType()); // TODO parametrize
+	filter.setType(params.getType());
 }
