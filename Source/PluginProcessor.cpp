@@ -25,6 +25,8 @@ MorphShaperAudioProcessor::MorphShaperAudioProcessor()
 	,
 	parameters(createPluginParameters())
 {
+	modulationMatrix.reset(new ModulationMatrix());
+
 	juce::ValueTree libraryPathParam(juce::Identifier("wtLibraryPath"));
 	libraryPathParam.setProperty("path", "", nullptr);
 	libraryPathParam.setProperty("fileName", "", nullptr);
@@ -36,6 +38,7 @@ MorphShaperAudioProcessor::MorphShaperAudioProcessor()
 	lfoFrequencyParameter = parameters.getRawParameterValue("lfoFrequency");
 
 	distortionEngine.reset(new DistortionEngine(
+		*modulationMatrix,
 		wavetablePositionParameter,
 		preGainParameter,
 		postGainParameter,
@@ -57,6 +60,10 @@ MorphShaperAudioProcessor::MorphShaperAudioProcessor()
 
 	lfo.initialise([](float x) { return std::sin(x); }, 128);
 	lfo.setFrequency(*lfoFrequencyParameter);
+
+	lfoOutput = new std::atomic<float>(0.0f);
+	modulationMatrix->assignModulationSource(ModulationMatrix::ModulationSource::LFO1, lfoOutput);
+	modulationMatrix->setModulationDestination(ModulationMatrix::ModulationSource::LFO1, ModulationMatrix::ModulationDestination::WavetablePosition);
 }
 
 MorphShaperAudioProcessor::~MorphShaperAudioProcessor()
@@ -201,8 +208,8 @@ void MorphShaperAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, j
 	{
 		lfoUpdateCounter = lfoUpdateRate;
 		auto lfoOut = lfo.processSample(0.0f);
-		auto modulatorValue = juce::jmap(lfoOut, -1.0f, 1.0f, -0.5f, 0.5f);
-		distortionEngine->setLfoModulatorValue(modulatorValue);
+		*lfoOutput = juce::jmap(lfoOut, -1.0f, 1.0f, -0.5f, 0.5f);
+		//distortionEngine->setLfoModulatorValue(modulatorValue);
 	}
 
 	distortionEngine->process(context);

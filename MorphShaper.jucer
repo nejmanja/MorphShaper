@@ -27,6 +27,10 @@
         <FILE id="zeNf7o" name="WavetableDrawer.h" compile="0" resource="0"
               file="Source/WavetableDrawer.h"/>
       </GROUP>
+      <FILE id="Z6FX9n" name="ModulationMatrix.cpp" compile="1" resource="0"
+            file="Source/ModulationMatrix.cpp"/>
+      <FILE id="voHdaQ" name="ModulationMatrix.h" compile="0" resource="0"
+            file="Source/ModulationMatrix.h"/>
       <FILE id="vs7LIM" name="FilterPluginParameters.cpp" compile="1" resource="0"
             file="Source/FilterPluginParameters.cpp"/>
       <FILE id="DU9xpk" name="FilterPluginParameters.h" compile="0" resource="0"

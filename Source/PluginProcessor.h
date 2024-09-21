@@ -10,6 +10,7 @@
 
 #include <JuceHeader.h>
 #include "DistortionEngine.h"
+#include "ModulationMatrix.h"
 
 //==============================================================================
 /**
@@ -60,6 +61,8 @@ public:
 private:
     juce::AudioProcessorValueTreeState createPluginParameters();
 
+    std::unique_ptr<ModulationMatrix> modulationMatrix;
+
     static constexpr size_t lfoUpdateRate = 100;
     size_t lfoUpdateCounter = lfoUpdateRate;
     juce::dsp::Oscillator<float> lfo;
@@ -70,6 +73,7 @@ private:
     std::atomic<float>* postGainParameter;
     
     std::atomic<float>* lfoFrequencyParameter;
+    std::atomic<float>* lfoOutput;
 
     std::unique_ptr<DistortionEngine> distortionEngine;
     //==============================================================================

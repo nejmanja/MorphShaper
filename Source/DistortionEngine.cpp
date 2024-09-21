@@ -10,8 +10,8 @@
 
 #include "DistortionEngine.h"
 
-DistortionEngine::DistortionEngine(std::atomic<float>* wavetablePositionParameter, std::atomic<float>* preGainParameter, std::atomic<float>* postGainParameter, FilterPluginParameters preFilterParams, FilterPluginParameters postFilterParams) :
-	modulationParameter(wavetablePositionParameter), preGainParameter(preGainParameter), postGainParameter(postGainParameter), preFilterParams(preFilterParams), postFilterParams(postFilterParams)
+DistortionEngine::DistortionEngine(ModulationMatrix& modulationMatrix, std::atomic<float>* wavetablePositionParameter, std::atomic<float>* preGainParameter, std::atomic<float>* postGainParameter, FilterPluginParameters preFilterParams, FilterPluginParameters postFilterParams) :
+	modulationParameter(wavetablePositionParameter), preGainParameter(preGainParameter), postGainParameter(postGainParameter), preFilterParams(preFilterParams), postFilterParams(postFilterParams), modulationMatrix(modulationMatrix)
 {
 	auto& waveshaperProcessor = processorChain.template get<waveshaperIndex>();
 	waveshaperProcessor.setModulationParameter(*modulationParameter);
