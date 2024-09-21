@@ -273,8 +273,11 @@ juce::AudioProcessorValueTreeState MorphShaperAudioProcessor::createPluginParame
 			std::make_unique<juce::AudioParameterFloat>("postFilterCutoff", "Post Filter Cutoff Frequency", juce::NormalisableRange<float>(20, 20000, 0, 0.7f), 1000.0f),
 			std::make_unique<juce::AudioParameterFloat>("postFilterResonance", "Post Filter Resonance", juce::NormalisableRange<float>(0.5f, 10.0f, 0.0f, 0.7f), 0.7f),
 
-			std::make_unique<juce::AudioParameterFloat>("lfo1Frequency", "LFO1 frequency", juce::NormalisableRange<float>(1.0f, 20.0f), 3.0f),
-			std::make_unique<juce::AudioParameterFloat>("lfo1Intensity", "LFO1 modulation intensity", juce::NormalisableRange<float>(0.0f, 1.0f), 0.0f)
+			std::make_unique<juce::AudioParameterFloat>("lfo1Frequency", "LFO1 Frequency", juce::NormalisableRange<float>(1.0f, 20.0f), 3.0f),
+			std::make_unique<juce::AudioParameterFloat>("lfo1Intensity", "LFO1 Modulation Intensity", juce::NormalisableRange<float>(0.0f, 1.0f), 0.0f),
+
+			std::make_unique<juce::AudioParameterFloat>("lfo2Frequency", "LFO2 Frequency", juce::NormalisableRange<float>(1.0f, 20.0f), 3.0f),
+			std::make_unique<juce::AudioParameterFloat>("lfo2Intensity", "LFO2 Modulation Intensity", juce::NormalisableRange<float>(0.0f, 1.0f), 0.0f)
 		}
 	};
 }

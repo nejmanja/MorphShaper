@@ -1,9 +1,9 @@
 /*
   ==============================================================================
 
-    LFOEditor.h
-    Created: 21 Sep 2024 4:21:58pm
-    Author:  Nemanja
+	LFOEditor.h
+	Created: 21 Sep 2024 4:21:58pm
+	Author:  Nemanja
 
   ==============================================================================
 */
@@ -16,28 +16,29 @@
 //==============================================================================
 /*
 */
-class LFOEditor  : public juce::Component
+class LFOEditor : public juce::Component
 {
 public:
-    LFOEditor(juce::AudioProcessorValueTreeState& vts, ModulationMatrix& modulationMatrix);
-    ~LFOEditor() override;
+	LFOEditor(juce::AudioProcessorValueTreeState& vts, ModulationMatrix& modulationMatrix, ModulationMatrix::ModulationSource modSource);
+	~LFOEditor() override;
 
-    void paint (juce::Graphics&) override;
-    void resized() override;
+	void paint(juce::Graphics&) override;
+	void resized() override;
 
 private:
-    void changeModulationDestination();
+	void changeModulationDestination();
 
-    typedef juce::AudioProcessorValueTreeState::SliderAttachment SliderAttachment;
+	typedef juce::AudioProcessorValueTreeState::SliderAttachment SliderAttachment;
 
-    juce::ComboBox lfoTypeComboBox;
-    juce::ComboBox lfoTargetComboBox;
-    juce::Slider frequencySlider;
-    juce::Slider modulationIntensitySlider;
-    std::unique_ptr<SliderAttachment> frequencySliderAttachment;
-    std::unique_ptr<SliderAttachment> modulationIntensitySliderAttachment;
+	juce::ComboBox lfoTypeComboBox;
+	juce::ComboBox lfoTargetComboBox;
+	juce::Slider frequencySlider, modulationIntensitySlider;
+	std::unique_ptr<SliderAttachment> frequencySliderAttachment, modulationIntensitySliderAttachment;
+	juce::Label frequencySliderLabel, modulationIntensitySliderLabel;
 
-    ModulationMatrix& modulationMatrix;
+	ModulationMatrix& modulationMatrix;
+	// which LFO is this editor for?
+	ModulationMatrix::ModulationSource modSource;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LFOEditor)
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(LFOEditor)
 };

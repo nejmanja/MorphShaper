@@ -39,11 +39,12 @@ private:
 	WavetableDrawer wavetableDrawer;
 	WavetableLibraryPicker wavetableLibraryPicker;
 	FilterEditor preFilterEditor, postFilterEditor;
-	LFOEditor lfoEditor;
+	LFOEditor lfo1Editor, lfo2Editor;
 
 	juce::AudioProcessorValueTreeState& valueTreeState;
 	std::unique_ptr<juce::ParameterAttachment> modulationParamAttachment;
 	juce::Label titleLabel;
+	juce::Label lfoSectionTitleLabel, wavetableSectionTitleLabel, distortionSectionTitleLabel;
 
 	std::function<void(float)> modulationParamChangedCallback;
 

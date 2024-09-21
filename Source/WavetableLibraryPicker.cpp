@@ -24,12 +24,13 @@ WavetableLibraryPicker::WavetableLibraryPicker(DistortionEngine& distortionEngin
 	addAndMakeVisible(ascendingModeButton);
 	addAndMakeVisible(symmetricModeLabel);
 	addAndMakeVisible(ascendingModeLabel);
+	addAndMakeVisible(drawer);
 
 	audioFormatManager.registerBasicFormats();
 
 	currentWavetableFileIndex = 0;
 
-	wavetableLibraryLoadButton.setButtonText("Choose wavetable library folder...");
+	wavetableLibraryLoadButton.setButtonText("...");
 	wavetableLibraryLoadButton.onClick = [this]()
 		{
 			chooseWavetableLibraryFolder();
@@ -83,18 +84,24 @@ void WavetableLibraryPicker::paint(juce::Graphics& g)
 
 void WavetableLibraryPicker::resized()
 {
+	auto bounds = getLocalBounds();
 	const int footerHeight = 20;
 	const int checkboxWidth = 24;
-	auto bounds = getLocalBounds();
-	auto togglesBounds = bounds.removeFromBottom(footerHeight);
-	auto thirdHeight = bounds.getHeight() / 3;
-	auto smallButtonWidth = bounds.getWidth() / 8;
-	wavetableLibraryLoadButton.setBounds(bounds.removeFromTop(thirdHeight));
-	wavetableLibraryFolderLabel.setBounds(bounds.removeFromTop(thirdHeight));
+	const int headerHeight = bounds.getHeight() / 5;
+	const int thirdHeight = bounds.getHeight() / 3;
+	const int smallButtonWidth = bounds.getWidth() / 8;
 
-	prevWavetableButton.setBounds(bounds.removeFromLeft(smallButtonWidth));
-	nextWavetableButton.setBounds(bounds.removeFromRight(smallButtonWidth));
-	currentWavetableFileLabel.setBounds(bounds);
+	auto togglesBounds = bounds.removeFromBottom(footerHeight);
+	auto headerBounds = bounds.removeFromTop(headerHeight);
+
+	prevWavetableButton.setBounds(headerBounds.removeFromLeft(smallButtonWidth));
+	wavetableLibraryLoadButton.setBounds(headerBounds.removeFromRight(thirdHeight));
+	headerBounds.removeFromRight(6); // some spacing
+	nextWavetableButton.setBounds(headerBounds.removeFromRight(smallButtonWidth));
+	currentWavetableFileLabel.setBounds(headerBounds.removeFromRight(headerBounds.getWidth() / 2));
+	wavetableLibraryFolderLabel.setBounds(headerBounds);
+
+	drawer.setBounds(bounds);
 
 	auto symmetricModeBounds = togglesBounds.removeFromLeft(togglesBounds.getWidth() / 2);
 	symmetricModeButton.setBounds(symmetricModeBounds.removeFromLeft(checkboxWidth));

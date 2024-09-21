@@ -40,6 +40,7 @@ FilterEditor::FilterEditor(const juce::String& title, juce::AudioProcessorValueT
 
     addAndMakeVisible(titleLabel);
     titleLabel.setText(title, juce::dontSendNotification);
+    titleLabel.setFont(titleLabel.getFont().boldened());
 
     addAndMakeVisible(enabledToggle);
     enabledToggle.setClickingTogglesState(true);
