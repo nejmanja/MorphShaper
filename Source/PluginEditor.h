@@ -13,6 +13,7 @@
 #include "DistortionEditor.h"
 #include "WavetableDrawer.h"
 #include "FilterEditor.h"
+#include "LFOEditor.h"
 
 //==============================================================================
 /**
@@ -20,7 +21,7 @@
 class MorphShaperAudioProcessorEditor : public juce::AudioProcessorEditor
 {
 public:
-	MorphShaperAudioProcessorEditor(MorphShaperAudioProcessor&, juce::AudioProcessorValueTreeState&);
+	MorphShaperAudioProcessorEditor(MorphShaperAudioProcessor&, std::atomic<float>* lfoFrequencyParam, juce::AudioProcessorValueTreeState&);
 	~MorphShaperAudioProcessorEditor() override;
 
 	//==============================================================================
@@ -37,6 +38,7 @@ private:
 	WavetableDrawer wavetableDrawer;
 	WavetableLibraryPicker wavetableLibraryPicker;
 	FilterEditor preFilterEditor, postFilterEditor;
+	LFOEditor lfoEditor;
 
 	juce::AudioProcessorValueTreeState& valueTreeState;
 	std::unique_ptr<juce::ParameterAttachment> modulationParamAttachment;

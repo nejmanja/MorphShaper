@@ -38,7 +38,6 @@ MorphShaperAudioProcessor::MorphShaperAudioProcessor()
 			std::make_unique<juce::AudioParameterFloat>("postFilterResonance", "Post Filter Resonance", juce::NormalisableRange<float>(0.5f, 10.0f, 0.0f, 0.7f), 0.7f),
 		})
 {
-
 	juce::ValueTree libraryPathParam(juce::Identifier("wtLibraryPath"));
 	libraryPathParam.setProperty("path", "", nullptr);
 	libraryPathParam.setProperty("fileName", "", nullptr);
@@ -67,8 +66,10 @@ MorphShaperAudioProcessor::MorphShaperAudioProcessor()
 		}
 	));
 
+
+	lfoFrequencyParameter = 3.0f;
 	lfo.initialise([](float x) { return std::sin(x); }, 128);
-	lfo.setFrequency(3.0f);
+	lfo.setFrequency(lfoFrequencyParameter);
 }
 
 MorphShaperAudioProcessor::~MorphShaperAudioProcessor()
@@ -203,9 +204,12 @@ void MorphShaperAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, j
 	auto block = juce::dsp::AudioBlock<float>(buffer);
 	auto context = juce::dsp::ProcessContextReplacing<float>(block);
 
-	auto max = juce::jmin((size_t)buffer.getNumSamples(), lfoUpdateCounter);
-	lfoUpdateCounter -= max;
+	if (lfoFrequencyParameter != lfo.getFrequency())
+		lfo.setFrequency(lfoFrequencyParameter);
 
+	auto max = juce::jmin((size_t)buffer.getNumSamples(), lfoUpdateCounter);
+	lfoUpdateCounter -= max;	
+	
 	if (lfoUpdateCounter == 0)
 	{
 		lfoUpdateCounter = lfoUpdateRate;
@@ -225,7 +229,7 @@ bool MorphShaperAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* MorphShaperAudioProcessor::createEditor()
 {
-	return new MorphShaperAudioProcessorEditor(*this, parameters);
+	return new MorphShaperAudioProcessorEditor(*this, &lfoFrequencyParameter, parameters);
 }
 
 //==============================================================================

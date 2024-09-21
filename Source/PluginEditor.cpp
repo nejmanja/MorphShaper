@@ -10,9 +10,10 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-MorphShaperAudioProcessorEditor::MorphShaperAudioProcessorEditor(MorphShaperAudioProcessor& p, juce::AudioProcessorValueTreeState& vts)
+MorphShaperAudioProcessorEditor::MorphShaperAudioProcessorEditor(MorphShaperAudioProcessor& p, std::atomic<float>* lfoFrequencyParam, juce::AudioProcessorValueTreeState& vts)
 	: AudioProcessorEditor(&p),
 	audioProcessor(p),
+	lfoEditor(lfoFrequencyParam),
 	distortionEditor(audioProcessor.getDistortionEngine(), vts),
 	wavetableLibraryPicker(audioProcessor.getDistortionEngine(), wavetableDrawer, vts.state.getChild(0)),
 	valueTreeState(vts),
@@ -29,6 +30,7 @@ MorphShaperAudioProcessorEditor::MorphShaperAudioProcessorEditor(MorphShaperAudi
 	addAndMakeVisible(titleLabel);
 	addAndMakeVisible(preFilterEditor);
 	addAndMakeVisible(postFilterEditor);
+	addAndMakeVisible(lfoEditor);
 
 	titleLabel.setText("MorphShaper", juce::dontSendNotification);
 	titleLabel.setJustificationType(juce::Justification::centred);
@@ -71,7 +73,10 @@ void MorphShaperAudioProcessorEditor::resized()
 	bounds.removeFromTop(6); // some padding between sections
 	preFilterEditor.setBounds(bounds.removeFromLeft(quarterWidth));
 	postFilterEditor.setBounds(bounds.removeFromRight(quarterWidth));
-	distortionEditor.setBounds(bounds);
+
+	auto distortionEditorHeight = bounds.getHeight() * 3 / 4;
+	distortionEditor.setBounds(bounds.removeFromTop(distortionEditorHeight));
+	lfoEditor.setBounds(bounds);
 }
 
 void MorphShaperAudioProcessorEditor::modulationParameterChanged(float newValue)

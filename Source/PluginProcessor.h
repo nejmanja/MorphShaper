@@ -66,6 +66,8 @@ private:
     std::atomic<float>* wavetablePositionParameter;
     std::atomic<float>* preGainParameter;
     std::atomic<float>* postGainParameter;
+    
+    std::atomic<float> lfoFrequencyParameter;
 
     std::unique_ptr<DistortionEngine> distortionEngine;
     //==============================================================================

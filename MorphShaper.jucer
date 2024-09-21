@@ -16,6 +16,8 @@
         <FILE id="Lhg8pb" name="FilterEditor.cpp" compile="1" resource="0"
               file="Source/FilterEditor.cpp"/>
         <FILE id="ZuWqjy" name="FilterEditor.h" compile="0" resource="0" file="Source/FilterEditor.h"/>
+        <FILE id="aTCW0O" name="LFOEditor.cpp" compile="1" resource="0" file="Source/LFOEditor.cpp"/>
+        <FILE id="L4O9BY" name="LFOEditor.h" compile="0" resource="0" file="Source/LFOEditor.h"/>
         <FILE id="iZZxEW" name="WavetableLibraryPicker.cpp" compile="1" resource="0"
               file="Source/WavetableLibraryPicker.cpp"/>
         <FILE id="C1F5XN" name="WavetableLibraryPicker.h" compile="0" resource="0"
