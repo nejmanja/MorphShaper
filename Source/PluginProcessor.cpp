@@ -35,8 +35,10 @@ MorphShaperAudioProcessor::MorphShaperAudioProcessor()
 	preGainParameter = parameters.getRawParameterValue("preGain");
 	postGainParameter = parameters.getRawParameterValue("postGain");
 
-	lfoFrequencyParameter = parameters.getRawParameterValue("lfo1Frequency");
-	lfoIntensityParameter = parameters.getRawParameterValue("lfo1Intensity");
+	lfo1FrequencyParameter = parameters.getRawParameterValue("lfo1Frequency");
+	lfo1IntensityParameter = parameters.getRawParameterValue("lfo1Intensity");
+	lfo2FrequencyParameter = parameters.getRawParameterValue("lfo2Frequency");
+	lfo2IntensityParameter = parameters.getRawParameterValue("lfo2Intensity");
 
 	distortionEngine.reset(new DistortionEngine(
 		*modulationMatrix,
@@ -59,12 +61,18 @@ MorphShaperAudioProcessor::MorphShaperAudioProcessor()
 		}
 	));
 
-	lfo.initialise([](float x) { return std::sin(x); }, 128);
-	lfo.setFrequency(*lfoFrequencyParameter);
+	lfo1.initialise([](float x) { return std::sin(x); }, 128);
+	lfo1.setFrequency(*lfo1FrequencyParameter);
+	lfo2.initialise([](float x) { return std::sin(x); }, 128);
+	lfo2.setFrequency(*lfo2FrequencyParameter);
 
-	lfoOutput = new std::atomic<float>(0.0f);
-	modulationMatrix->assignModulationSource(ModulationMatrix::ModulationSource::LFO1, lfoOutput);
-	modulationMatrix->setModulationDestination(ModulationMatrix::ModulationSource::LFO1, ModulationMatrix::ModulationDestination::WavetablePosition);
+	lfo1Output = new std::atomic<float>(0.0f);
+	modulationMatrix->assignModulationSource(ModulationMatrix::ModulationSource::LFO1, lfo1Output);
+	modulationMatrix->setModulationDestination(ModulationMatrix::ModulationSource::LFO1, ModulationMatrix::ModulationDestination::None);
+	
+	lfo2Output = new std::atomic<float>(0.0f);
+	modulationMatrix->assignModulationSource(ModulationMatrix::ModulationSource::LFO2, lfo2Output);
+	modulationMatrix->setModulationDestination(ModulationMatrix::ModulationSource::LFO2, ModulationMatrix::ModulationDestination::None);
 }
 
 MorphShaperAudioProcessor::~MorphShaperAudioProcessor()
@@ -143,8 +151,9 @@ void MorphShaperAudioProcessor::prepareToPlay(double sampleRate, int samplesPerB
 	// Use this method as the place to do any pre-playback
 	// initialisation that you need..
 	distortionEngine->prepare({ sampleRate, (juce::uint32)samplesPerBlock, (juce::uint32)getTotalNumOutputChannels() });
-	
-	lfo.prepare({ sampleRate / lfoUpdateRate, (juce::uint32)samplesPerBlock, (juce::uint32)getTotalNumOutputChannels() });
+
+	lfo1.prepare({ sampleRate / lfoUpdateRate, (juce::uint32)samplesPerBlock, (juce::uint32)getTotalNumOutputChannels() });
+	lfo2.prepare({ sampleRate / lfoUpdateRate, (juce::uint32)samplesPerBlock, (juce::uint32)getTotalNumOutputChannels() });
 }
 
 void MorphShaperAudioProcessor::releaseResources()
@@ -199,8 +208,10 @@ void MorphShaperAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, j
 	auto block = juce::dsp::AudioBlock<float>(buffer);
 	auto context = juce::dsp::ProcessContextReplacing<float>(block);
 
-	if (*lfoFrequencyParameter != lfo.getFrequency())
-		lfo.setFrequency(*lfoFrequencyParameter);
+	if (*lfo1FrequencyParameter != lfo1.getFrequency())
+		lfo1.setFrequency(*lfo1FrequencyParameter);
+	if (*lfo2FrequencyParameter != lfo2.getFrequency())
+		lfo2.setFrequency(*lfo2FrequencyParameter);
 
 	auto max = juce::jmin((size_t)buffer.getNumSamples(), lfoUpdateCounter);
 	lfoUpdateCounter -= max;	
@@ -208,8 +219,10 @@ void MorphShaperAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, j
 	if (lfoUpdateCounter == 0)
 	{
 		lfoUpdateCounter = lfoUpdateRate;
-		auto lfoOut = lfo.processSample(0.0f);
-		*lfoOutput = juce::jmap(lfoOut, -1.0f, 1.0f, -0.5f, 0.5f) * *lfoIntensityParameter;
+		auto lfoOut = lfo1.processSample(0.0f);
+		*lfo1Output = juce::jmap(lfoOut, -1.0f, 1.0f, -0.5f, 0.5f) * *lfo1IntensityParameter;
+		lfoOut = lfo2.processSample(0.0f);
+		*lfo2Output = juce::jmap(lfoOut, -1.0f, 1.0f, -0.5f, 0.5f) * *lfo2IntensityParameter;
 	}
 
 	distortionEngine->process(context);

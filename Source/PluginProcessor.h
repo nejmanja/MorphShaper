@@ -65,15 +65,18 @@ private:
 
     static constexpr size_t lfoUpdateRate = 100;
     size_t lfoUpdateCounter = lfoUpdateRate;
-    juce::dsp::Oscillator<float> lfo;
+    juce::dsp::Oscillator<float> lfo1, lfo2;
 
     juce::AudioProcessorValueTreeState parameters;
     std::atomic<float>* wavetablePositionParameter;
     std::atomic<float>* preGainParameter;
     std::atomic<float>* postGainParameter;
-    
-    std::atomic<float>* lfoFrequencyParameter, * lfoIntensityParameter;
-    std::atomic<float>* lfoOutput;
+
+    std::atomic<float>* lfo1FrequencyParameter, * lfo1IntensityParameter;
+    std::atomic<float>* lfo1Output;
+
+    std::atomic<float>* lfo2FrequencyParameter, * lfo2IntensityParameter;
+    std::atomic<float>* lfo2Output;
 
     std::unique_ptr<DistortionEngine> distortionEngine;
     //==============================================================================
