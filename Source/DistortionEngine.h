@@ -47,7 +47,9 @@ private:
 		>
 		processorChain;
 
-	void setFilterParams(juce::dsp::StateVariableTPTFilter<float>& filter, FilterPluginParameters& params);
+	void setFilterCutoff(juce::dsp::StateVariableTPTFilter<float>& filter, float value) { filter.setCutoffFrequency(value); }
+	void setFilterResonance(juce::dsp::StateVariableTPTFilter<float>& filter, float value) { filter.setResonance(value); }
+	void setFilterType(juce::dsp::StateVariableTPTFilter<float>& filter, juce::dsp::StateVariableTPTFilterType value) { filter.setType(value); }
 
 	// This gets passed along from the constructor, it's unique state that exists on the plugin-level.
 	std::atomic<float>* modulationParameter, * preGainParameter, * postGainParameter;
@@ -69,11 +71,18 @@ inline void DistortionEngine::process(const ProcessContext& context) noexcept
 	postGainProcessor.setGainDecibels(*postGainParameter);
 
 	auto & preFilterProcessor = processorChain.template get<preFilterIndex>();
-	setFilterParams(preFilterProcessor, preFilterParams);
+	auto preCutoffModulationValue = modulationMatrix.getModulationValue(ModulationMatrix::ModulationDestination::PreFilterFrequency);
+	setFilterCutoff(preFilterProcessor, juce::jlimit(20.0f, 20000.0f, preFilterParams.getFrequency() + preCutoffModulationValue * 10000.0f));
+	setFilterResonance(preFilterProcessor, preFilterParams.getResonance());
+	setFilterType(preFilterProcessor, preFilterParams.getType());
+
 	processorChain.setBypassed<preFilterIndex>(!preFilterParams.getEnabled());
 
 	auto & postFilterProcessor = processorChain.template get<postFilterIndex>();
-	setFilterParams(postFilterProcessor, postFilterParams);
+	auto postCutoffModulationValue = modulationMatrix.getModulationValue(ModulationMatrix::ModulationDestination::PostFilterFrequency);
+	setFilterCutoff(postFilterProcessor, juce::jlimit(20.0f, 20000.0f, postFilterParams.getFrequency() + postCutoffModulationValue * 10000.0f));
+	setFilterResonance(postFilterProcessor, postFilterParams.getResonance());
+	setFilterType(postFilterProcessor, postFilterParams.getType());
 	processorChain.setBypassed<postFilterIndex>(!postFilterParams.getEnabled());
 
 	processorChain.process(context);

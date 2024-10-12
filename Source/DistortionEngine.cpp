@@ -23,17 +23,15 @@ DistortionEngine::DistortionEngine(ModulationMatrix& modulationMatrix, std::atom
 	postGainProcessor.setGainDecibels(*postGainParameter);
 
 	auto& preFilterProcessor = processorChain.template get<preFilterIndex>();
-	setFilterParams(preFilterProcessor, preFilterParams);
+	setFilterCutoff(preFilterProcessor, preFilterParams.getFrequency());
+	setFilterResonance(preFilterProcessor, preFilterParams.getResonance());
+	setFilterType(preFilterProcessor, preFilterParams.getType());
+
 	processorChain.setBypassed<preFilterIndex>(!preFilterParams.getEnabled());
 
 	auto& postFilterProcessor = processorChain.template get<postFilterIndex>();
-	setFilterParams(postFilterProcessor, postFilterParams);
+	setFilterCutoff(postFilterProcessor, postFilterParams.getFrequency());
+	setFilterResonance(postFilterProcessor, postFilterParams.getResonance());
+	setFilterType(postFilterProcessor, postFilterParams.getType());
 	processorChain.setBypassed<postFilterIndex>(!postFilterParams.getEnabled());
-}
-
-void DistortionEngine::setFilterParams(juce::dsp::StateVariableTPTFilter<float>& filter, FilterPluginParameters& params)
-{
-	filter.setCutoffFrequency(params.getFrequency());
-	filter.setResonance(params.getResonance());
-	filter.setType(params.getType());
 }
