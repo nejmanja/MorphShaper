@@ -46,13 +46,17 @@ LFOEditor::LFOEditor(juce::AudioProcessorValueTreeState& vts, ModulationMatrix& 
 	case ModulationMatrix::ModulationSource::LFO1:
 		frequencySliderAttachment.reset(new SliderAttachment(vts, "lfo1Frequency", frequencySlider));
 		modulationIntensitySliderAttachment.reset(new SliderAttachment(vts, "lfo1Intensity", modulationIntensitySlider));
+		targetComboBoxAttachment.reset(new ComboBoxAttachment(vts, "lfo1Target", lfoTargetComboBox));
 		break;
 
 	case ModulationMatrix::ModulationSource::LFO2:
 		frequencySliderAttachment.reset(new SliderAttachment(vts, "lfo2Frequency", frequencySlider));
 		modulationIntensitySliderAttachment.reset(new SliderAttachment(vts, "lfo2Intensity", modulationIntensitySlider));
+		targetComboBoxAttachment.reset(new ComboBoxAttachment(vts, "lfo2Target", lfoTargetComboBox));
 		break;
 	}
+
+	changeModulationDestination();
 }
 
 LFOEditor::~LFOEditor()

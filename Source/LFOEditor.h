@@ -29,11 +29,14 @@ private:
 	void changeModulationDestination();
 
 	typedef juce::AudioProcessorValueTreeState::SliderAttachment SliderAttachment;
+	typedef juce::AudioProcessorValueTreeState::ComboBoxAttachment ComboBoxAttachment;
 
 	juce::ComboBox lfoTypeComboBox;
 	juce::ComboBox lfoTargetComboBox;
 	juce::Slider frequencySlider, modulationIntensitySlider;
 	std::unique_ptr<SliderAttachment> frequencySliderAttachment, modulationIntensitySliderAttachment;
+	std::unique_ptr<ComboBoxAttachment> targetComboBoxAttachment;
+	
 	juce::Label frequencySliderLabel, modulationIntensitySliderLabel;
 
 	ModulationMatrix& modulationMatrix;

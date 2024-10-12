@@ -55,6 +55,8 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+    void initializeLFOTarget(ModulationMatrix::ModulationSource source);
+
     //==============================================================================
     DistortionEngine& getDistortionEngine() { return *distortionEngine; }
 

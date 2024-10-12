@@ -68,11 +68,9 @@ MorphShaperAudioProcessor::MorphShaperAudioProcessor()
 
 	lfo1Output = new std::atomic<float>(0.0f);
 	modulationMatrix->assignModulationSource(ModulationMatrix::ModulationSource::LFO1, lfo1Output);
-	modulationMatrix->setModulationDestination(ModulationMatrix::ModulationSource::LFO1, ModulationMatrix::ModulationDestination::None);
 	
 	lfo2Output = new std::atomic<float>(0.0f);
 	modulationMatrix->assignModulationSource(ModulationMatrix::ModulationSource::LFO2, lfo2Output);
-	modulationMatrix->setModulationDestination(ModulationMatrix::ModulationSource::LFO2, ModulationMatrix::ModulationDestination::None);
 }
 
 MorphShaperAudioProcessor::~MorphShaperAudioProcessor()
@@ -263,6 +261,43 @@ void MorphShaperAudioProcessor::setStateInformation(const void* data, int sizeIn
 			parameters.replaceState(juce::ValueTree::fromXml(*xmlState));
 		}
 	}
+
+	initializeLFOTarget(ModulationMatrix::ModulationSource::LFO1);
+	initializeLFOTarget(ModulationMatrix::ModulationSource::LFO2);
+}
+
+void MorphShaperAudioProcessor::initializeLFOTarget(ModulationMatrix::ModulationSource source)
+{
+	juce::String paramName;
+	switch (source)
+	{
+	case ModulationMatrix::ModulationSource::LFO1:
+		paramName = "lfo1Target";
+		break;
+	case ModulationMatrix::ModulationSource::LFO2:
+		paramName = "lfo2Target";
+		break;
+	default:
+		return;
+	}
+
+	auto lfo1Target = static_cast<juce::AudioParameterChoice*>(parameters.getParameter(paramName));
+	auto lfo1TargetIdx = lfo1Target->getIndex();
+	switch (lfo1TargetIdx)
+	{
+	case 0:
+		modulationMatrix->setModulationDestination(source, ModulationMatrix::ModulationDestination::WavetablePosition);
+		break;
+	case 1:
+		modulationMatrix->setModulationDestination(source, ModulationMatrix::ModulationDestination::PreFilterFrequency);
+		break;
+	case 2:
+		modulationMatrix->setModulationDestination(source, ModulationMatrix::ModulationDestination::PreFilterFrequency);
+		break;
+	default:
+		modulationMatrix->setModulationDestination(source, ModulationMatrix::ModulationDestination::None);
+		break;
+	}
 }
 
 juce::AudioProcessorValueTreeState MorphShaperAudioProcessor::createPluginParameters()
@@ -288,9 +323,11 @@ juce::AudioProcessorValueTreeState MorphShaperAudioProcessor::createPluginParame
 
 			std::make_unique<juce::AudioParameterFloat>("lfo1Frequency", "LFO1 Frequency", juce::NormalisableRange<float>(1.0f, 20.0f), 3.0f),
 			std::make_unique<juce::AudioParameterFloat>("lfo1Intensity", "LFO1 Modulation Intensity", juce::NormalisableRange<float>(0.0f, 1.0f), 0.0f),
+			std::make_unique<juce::AudioParameterChoice>("lfo1Target", "LFO1 Modulation Target", juce::StringArray{ "Wavetable Position", "Pre-filter freq", "Post-filter freq" }, 0),
 
 			std::make_unique<juce::AudioParameterFloat>("lfo2Frequency", "LFO2 Frequency", juce::NormalisableRange<float>(1.0f, 20.0f), 3.0f),
-			std::make_unique<juce::AudioParameterFloat>("lfo2Intensity", "LFO2 Modulation Intensity", juce::NormalisableRange<float>(0.0f, 1.0f), 0.0f)
+			std::make_unique<juce::AudioParameterFloat>("lfo2Intensity", "LFO2 Modulation Intensity", juce::NormalisableRange<float>(0.0f, 1.0f), 0.0f),
+			std::make_unique<juce::AudioParameterChoice>("lfo2Target", "LFO2 Modulation Target", juce::StringArray{ "Wavetable Position", "Pre-filter freq", "Post-filter freq" }, 0),
 		}
 	};
 }
