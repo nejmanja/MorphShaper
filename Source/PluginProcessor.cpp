@@ -203,6 +203,9 @@ void MorphShaperAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, j
 	for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
 		buffer.clear(i, 0, buffer.getNumSamples());
 
+	// don't do processing if the input is 0
+	if (buffer.getMagnitude(0, buffer.getNumSamples()) == 0.0f) return;
+
 	auto block = juce::dsp::AudioBlock<float>(buffer);
 	auto context = juce::dsp::ProcessContextReplacing<float>(block);
 
