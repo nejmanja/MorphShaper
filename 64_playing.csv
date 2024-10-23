@@ -1,0 +1,9 @@
+"Buffer Size 64, playing",MorphShaper,ShaperTable,Rift,
+Avg,13.8,25.7,50.8,"32 instances, 1 track"
+StdDev,1.751190072,0.6749485577,1.751190072,
+Avg,19.5,43.5,92.4,"64 instances, 1 track"
+StdDev,1.269295518,1.649915823,2.221110833,
+Avg,29,79.5,100,"128 instances, 1 track"
+StdDev,2.538591035,5.25462759,0,
+Avg,46.5,100,#DIV/0!,"32 instances, 16 tracks"
+StdDev,1.08012345,0,#DIV/0!,
