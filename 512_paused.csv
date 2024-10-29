@@ -1,9 +1,9 @@
-"Buffer Size 512, paused",MorphShaper,ShaperTable,Rift,
-Avg,1.2,2.1,22.3,"32 instances, 1 track"
-StdDev,0.4216370214,0.7378647874,1.059349905,
-Avg,3.6,4.3,43.1,"64 instances, 1 track"
-StdDev,1.0749677,1.059349905,1.370320319,
-Avg,4.6,8.8,80.2,"128 instances, 1 track"
-StdDev,1.349897115,0.632455532,1.135292424,
-Avg,7.5,13.6,#DIV/0!,"32 instances, 16 tracks"
-StdDev,1.269295518,1.173787791,#DIV/0!,
+"Buffer Size 512, paused",MorphShaper,ShaperTable,Rift,Trash2,
+Avg,1.2,2.1,22.3,14.1,"32 instances, 1 track"
+StdDev,0.4216370214,0.7378647874,1.059349905,1.100504935,
+Avg,3.6,4.3,43.1,32.5,"64 instances, 1 track"
+StdDev,1.0749677,1.059349905,1.370320319,1.269295518,
+Avg,4.6,8.8,80.2,60.4,"128 instances, 1 track"
+StdDev,1.349897115,0.632455532,1.135292424,2.503331114,
+Avg,7.5,13.6,#DIV/0!,#DIV/0!,"32 instances, 16 tracks"
+StdDev,1.269295518,1.173787791,#DIV/0!,#DIV/0!,
