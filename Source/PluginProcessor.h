@@ -56,6 +56,7 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
     void initializeLFOTarget(ModulationMatrix::ModulationSource source);
+    void setLFOType(ModulationMatrix::ModulationSource source, int type);
 
     //==============================================================================
     DistortionEngine& getDistortionEngine() { return *distortionEngine; }

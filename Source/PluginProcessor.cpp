@@ -61,9 +61,9 @@ MorphShaperAudioProcessor::MorphShaperAudioProcessor()
 		}
 	));
 
-	lfo1.initialise([](float x) { return std::sin(x); }, 128);
+	setLFOType(ModulationMatrix::ModulationSource::LFO1, 1);
 	lfo1.setFrequency(*lfo1FrequencyParameter);
-	lfo2.initialise([](float x) { return std::sin(x); }, 128);
+	setLFOType(ModulationMatrix::ModulationSource::LFO2, 1);
 	lfo2.setFrequency(*lfo2FrequencyParameter);
 
 	lfo1Output = new std::atomic<float>(0.0f);
@@ -299,6 +299,40 @@ void MorphShaperAudioProcessor::initializeLFOTarget(ModulationMatrix::Modulation
 		break;
 	default:
 		modulationMatrix->setModulationDestination(source, ModulationMatrix::ModulationDestination::None);
+		break;
+	}
+}
+
+void MorphShaperAudioProcessor::setLFOType(ModulationMatrix::ModulationSource source, int type)
+{
+	std::function<float(float)> fun;
+	switch (type)
+	{
+	case 1: // sine
+		fun = [](float x) { return std::sin(x); };
+		break;
+	case 2: // triangle
+		fun = [](float x) { return 1 + x / juce::MathConstants<float>::pi * (x < 0.0f ? 2.0f : -2.0f); };
+		break;
+	case 3: // saw
+		fun = [](float x) { return x / juce::MathConstants<float>::pi; };
+		break;
+	case 4: // square
+		fun = [](float x) { return x < 0.0f ? -1.0f : 1.0f; };
+		break;
+	default:
+		return;
+	}
+
+	switch (source)
+	{
+	case ModulationMatrix::ModulationSource::LFO1:
+		lfo1.initialise(fun, 128);
+		break;
+	case ModulationMatrix::ModulationSource::LFO2:
+		lfo2.initialise(fun, 128);
+		break;
+	default:
 		break;
 	}
 }

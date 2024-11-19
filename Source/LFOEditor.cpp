@@ -12,12 +12,16 @@
 #include "LFOEditor.h"
 
 //==============================================================================
-LFOEditor::LFOEditor(juce::AudioProcessorValueTreeState& vts, ModulationMatrix& modulationMatrix, ModulationMatrix::ModulationSource modSource) :
-	modulationMatrix(modulationMatrix), modSource(modSource)
+LFOEditor::LFOEditor(MorphShaperAudioProcessor& processor, juce::AudioProcessorValueTreeState& vts, ModulationMatrix& modulationMatrix, ModulationMatrix::ModulationSource modSource) :
+	modulationMatrix(modulationMatrix), modSource(modSource), processor(processor)
 {
 	addAndMakeVisible(lfoTypeComboBox);
 	lfoTypeComboBox.addItemList({ "Sine", "Triangle", "Saw", "Square" }, 1);
 	lfoTypeComboBox.setSelectedId(1, juce::dontSendNotification);
+	lfoTypeComboBox.onChange = [this]()
+		{
+			changeLFOType();
+		};
 
 	addAndMakeVisible(lfoTargetComboBox);
 	lfoTargetComboBox.addItemList({ "Wavetable Position", "Pre-filter freq", "Post-filter freq" }, 1);
@@ -111,4 +115,10 @@ void LFOEditor::changeModulationDestination()
 
 	if (valid)
 		this->modulationMatrix.setModulationDestination(modSource, newDestination);
+}
+
+void LFOEditor::changeLFOType()
+{
+	int typeID = lfoTypeComboBox.getSelectedId();
+	processor.setLFOType(modSource, typeID);
 }

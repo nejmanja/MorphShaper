@@ -12,6 +12,7 @@
 
 #include <JuceHeader.h>
 #include "ModulationMatrix.h"
+#include "PluginProcessor.h"
 
 //==============================================================================
 /*
@@ -19,7 +20,7 @@
 class LFOEditor : public juce::Component
 {
 public:
-	LFOEditor(juce::AudioProcessorValueTreeState& vts, ModulationMatrix& modulationMatrix, ModulationMatrix::ModulationSource modSource);
+	LFOEditor(MorphShaperAudioProcessor& processor, juce::AudioProcessorValueTreeState& vts, ModulationMatrix& modulationMatrix, ModulationMatrix::ModulationSource modSource);
 	~LFOEditor() override;
 
 	void paint(juce::Graphics&) override;
@@ -27,6 +28,7 @@ public:
 
 private:
 	void changeModulationDestination();
+	void changeLFOType();
 
 	typedef juce::AudioProcessorValueTreeState::SliderAttachment SliderAttachment;
 	typedef juce::AudioProcessorValueTreeState::ComboBoxAttachment ComboBoxAttachment;
@@ -39,6 +41,7 @@ private:
 	
 	juce::Label frequencySliderLabel, modulationIntensitySliderLabel;
 
+	MorphShaperAudioProcessor& processor;
 	ModulationMatrix& modulationMatrix;
 	// which LFO is this editor for?
 	ModulationMatrix::ModulationSource modSource;

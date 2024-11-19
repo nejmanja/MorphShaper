@@ -13,8 +13,8 @@
 MorphShaperAudioProcessorEditor::MorphShaperAudioProcessorEditor(MorphShaperAudioProcessor& p, juce::AudioProcessorValueTreeState& vts, ModulationMatrix& modulationMatrix)
 	: AudioProcessorEditor(&p),
 	audioProcessor(p),
-	lfo1Editor(vts, modulationMatrix, ModulationMatrix::ModulationSource::LFO1),
-	lfo2Editor(vts, modulationMatrix, ModulationMatrix::ModulationSource::LFO2),
+	lfo1Editor(audioProcessor, vts, modulationMatrix, ModulationMatrix::ModulationSource::LFO1),
+	lfo2Editor(audioProcessor, vts, modulationMatrix, ModulationMatrix::ModulationSource::LFO2),
 	distortionEditor(audioProcessor.getDistortionEngine(), vts),
 	wavetableLibraryPicker(audioProcessor.getDistortionEngine(), wavetableDrawer, vts.state.getChild(0)),
 	valueTreeState(vts),
